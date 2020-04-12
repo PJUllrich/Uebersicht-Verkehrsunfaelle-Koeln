@@ -5,7 +5,7 @@ defmodule Web.AccidentQuery do
   def all() do
     from(
       a in Accident,
-      limit: 10_000,
+      limit: 100_000,
       select: [a.longitude, a.latitude]
     )
     |> Repo.all()

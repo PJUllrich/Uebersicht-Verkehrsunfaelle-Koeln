@@ -1,6 +1,4 @@
 import mapboxgl from 'mapbox-gl';
-import Supercluster from 'supercluster';
-import { featureCollection } from '@turf/turf'
 
 const raw_accidents = document.currentScript.getAttribute('accidents')
 const json_accidents = JSON.parse(raw_accidents)
@@ -22,26 +20,43 @@ const map = new mapboxgl.Map({
   zoom: 12
 });
 
-var cluster = new Supercluster({
-  radius: 30,
-  maxZoom: 18,
-  map: (props) => ({ count: 1 }),
-  reduce: function (accumulated, properties) {
-    accumulated.max = Math.round(Math.max(accumulated.max, properties.count) * 100) / 100;
-  }
-});
+const setColorSteps = (initial = false) => {
+  const clusters = map.queryRenderedFeatures({ layers: ["clusters"] });
+  let max_count = 1000
 
-cluster.load(features)
-let currentZoom = map.getZoom();
-let clusterData = featureCollection(cluster.getClusters([-180, -85, 180, 85], Math.floor(currentZoom)))
+  if (!initial) {
+    max_count = clusters
+      .map(c => c.properties.point_count)
+      .reduce((a, b) => Math.max(a, b));
+  }
+
+  map.setPaintProperty('clusters', 'circle-color', [
+    'interpolate',
+    ["linear"],
+    ['get', 'point_count'],
+    0, "#b2ebf2",
+    max_count, "#dd2c00"
+  ]);
+
+  map.setPaintProperty('clusters', 'circle-radius', [
+    'interpolate',
+    ["linear"],
+    ['get', 'point_count'],
+    0, 12,
+    max_count, 17
+  ])
+}
 
 map.on('load', function () {
   map.addSource('accidents', {
     type: 'geojson',
     cluster: true,
     clusterMaxZoom: 18,
-    clusterRadius: 30,
-    data: clusterData
+    clusterRadius: 25,
+    data: {
+      type: 'FeatureCollection',
+      features: features
+    }
   });
   map.addLayer({
     id: 'clusters',
@@ -63,8 +78,8 @@ map.on('load', function () {
         'interpolate',
         ["linear"],
         ['get', 'point_count'],
-        0, 5,
-        1, 25
+        0, 10,
+        1, 17
       ]
     },
   });
@@ -75,7 +90,7 @@ map.on('load', function () {
     source: 'accidents',
     filter: ['has', 'point_count'],
     layout: {
-      'text-field': '{point_count}/ {max}',
+      'text-field': '{point_count}',
       'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
       'text-size': 12
     }
@@ -93,4 +108,9 @@ map.on('load', function () {
       'circle-stroke-color': '#fff'
     }
   });
+
+  setColorSteps(true);
 })
+
+map.on('move', (e) => setColorSteps())
+map.on('zoomend', (e) => setColorSteps())
