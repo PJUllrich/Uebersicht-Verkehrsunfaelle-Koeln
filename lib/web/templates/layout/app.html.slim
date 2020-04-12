@@ -4,7 +4,7 @@ html lang="en"
     meta charset="utf-8"
     meta http-equiv="X-UA-Compatible" content="IE=edge"
     meta name="viewport" content="width=device-width, initial-scale=1.0"
-    title App
+    title Verkehrsunfälle Köln
     link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet"
     link rel="stylesheet" href=Routes.static_path(@conn,"/css/app.css")
   body
@@ -12,5 +12,5 @@ html lang="en"
     = render "_flashes.html", assigns
     = render @view_module, @view_template, assigns
     = csrf_meta_tag()
-    script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"
-    script type="text/javascript" src=Routes.static_path(@conn,"/js/app.js")
+    = render "_scripts.html", assigns    
+
