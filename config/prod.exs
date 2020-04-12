@@ -10,8 +10,16 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :app, Web.Endpoint,
-  url: [host: "example.com", port: 80],
+  http: [port: {:system, "PORT"}],
+  url: [scheme: "https", host: {:system, "HOSTNAME"}, port: 443],
+  force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json"
+
+config :einsatzplanung, Einsatzplanung.Repo,
+  url: System.get_env("HEROKU_POSTGRESQL_PUCE_URL"),
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+  timeout: 28_000,
+  ssl: true
 
 # Do not print debug messages in production
 config :logger, level: :info
