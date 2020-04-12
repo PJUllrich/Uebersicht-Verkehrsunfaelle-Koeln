@@ -1,0 +1,16 @@
+doctype html
+html lang="en"
+  head
+    meta charset="utf-8"
+    meta http-equiv="X-UA-Compatible" content="IE=edge"
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    title App
+    link rel="stylesheet" href=Routes.static_path(@conn,"/css/app.css")
+  body
+    header
+      = render "_header.html", assigns
+    main.container role="main"
+      = render "_flashes.html", assigns
+      = render @view_module, @view_template, assigns
+    = csrf_meta_tag()
+    script type="text/javascript" src=Routes.static_path(@conn,"/js/app.js")
