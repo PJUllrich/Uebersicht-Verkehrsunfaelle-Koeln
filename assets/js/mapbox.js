@@ -15,7 +15,7 @@ const features = json_accidents.map(acc => {
 mapboxgl.accessToken = document.currentScript.getAttribute('accesstoken');
 const map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/mapbox/streets-v11',
+  style: 'mapbox://styles/mapbox/light-v10',
   center: [6.961, 50.937],
   zoom: 12
 });
@@ -23,22 +23,26 @@ const map = new mapboxgl.Map({
 const circleColor = (max_count) => {
   return [
     'interpolate',
-    ["linear"],
+    ["exponential", 0.06],
     ['get', 'point_count'],
-    0, "#33E3FF",
-    Math.floor(max_count / 4), "#FCFF33",
-    Math.floor(max_count / 2), "#FFD733",
-    max_count, "#FF5833"
+    0, "#655fb6",
+    Math.floor(max_count / 3), "#5ea9f7",
+    Math.floor(max_count / 2), "#efe433",
+    Math.floor(max_count / 1.5), "#ef8633",
+    max_count, "#e93223"
   ]
 }
 
 const circleRadius = (max_count) => {
   return [
     'interpolate',
-    ["linear"],
+    ["exponential", 0.05],
     ['get', 'point_count'],
-    0, 12,
-    max_count, 17
+    0, 6,
+    Math.floor(max_count / 3), 8,
+    Math.floor(max_count / 2), 11,
+    Math.floor(max_count / 3 * 2), 12,
+    max_count, 15
   ]
 }
 
@@ -61,7 +65,7 @@ map.on('load', () => {
     type: 'geojson',
     cluster: true,
     clusterMaxZoom: 18,
-    clusterRadius: 25,
+    clusterRadius: 20,
     data: {
       type: 'FeatureCollection',
       features: features
@@ -75,6 +79,7 @@ map.on('load', () => {
     layout: {
       visibility: 'visible'
     }
+
   });
 
   map.addLayer({
@@ -86,6 +91,9 @@ map.on('load', () => {
       'text-field': '{point_count}',
       'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
       'text-size': 12
+    },
+    paint: {
+      'text-color': "#FFFFFF"
     }
   });
 
@@ -95,8 +103,8 @@ map.on('load', () => {
     source: 'accidents',
     filter: ['!', ['has', 'point_count']],
     paint: {
-      'circle-color': '#11b4da',
-      'circle-radius': 4,
+      'circle-color': '#5ea9f7',
+      'circle-radius': 3,
       'circle-stroke-width': 1,
       'circle-stroke-color': '#fff'
     }
