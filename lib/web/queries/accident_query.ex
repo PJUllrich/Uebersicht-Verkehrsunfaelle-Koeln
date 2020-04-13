@@ -18,6 +18,7 @@ defmodule Web.AccidentQuery do
     |> with_filter(:vb2, filter.vb2)
     |> select([a], [a.longitude, a.latitude])
     |> Repo.all()
+    |> to_geojson()
   end
 
   defp with_filter(query, :years, nil), do: query
@@ -45,5 +46,13 @@ defmodule Web.AccidentQuery do
       a in query,
       where: a.vb2 in ^vb2
     )
+  end
+
+  defp to_geojson(accidents) do
+    features =
+      for [long, lat] <- accidents,
+          do: %{type: "Feature", geometry: %{type: "Point", coordinates: [long, lat]}}
+
+    %{type: "FeatureCollection", features: features}
   end
 end

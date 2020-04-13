@@ -1,2 +1,2 @@
 script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"
-script type="text/javascript" src=Routes.static_path(@conn,"/js/app.js") accesstoken="#{System.get_env("MAPBOX_ACCESS_TOKEN")}" accidents="#{Jason.encode!(@accidents)}"
+script type="text/javascript" src=Routes.static_path(@conn,"/js/app.js") accesstoken="#{System.get_env("MAPBOX_ACCESS_TOKEN")}" endpoint="#{Routes.map_url(@conn, :data)}"

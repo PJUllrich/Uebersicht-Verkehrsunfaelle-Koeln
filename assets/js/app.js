@@ -24,8 +24,3 @@ import "./mapbox"
 // let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
 // let liveSocket = new LiveSocket("/live", Socket, { params: { _csrf_token: csrfToken } });
 // liveSocket.connect()
-
-window.toggleFilter = () => {
-  const el = document.getElementById("accidentFilter")
-  el.style.display = el.style.display === "block" ? "none" : "block";
-}

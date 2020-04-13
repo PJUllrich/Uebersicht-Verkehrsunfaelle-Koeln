@@ -4,22 +4,18 @@ defmodule Web.MapController do
   alias Web.AccidentQuery
   alias Web.AccidentForm
 
-  def index(conn, %{"q" => query}) do
+  def data(conn, %{"q" => query}) do
     case AccidentForm.validate(query) do
       {:ok, filter} ->
         accidents = AccidentQuery.filter(filter)
-        render(conn, "index.html", accidents: accidents, form: AccidentForm.new(query))
+        json(conn, accidents)
 
-      {:error, invalid_changeset} ->
-        accidents = AccidentQuery.default()
-        render(conn, "index.html", accidents: accidents, form: invalid_changeset)
+      {:error, _invalid_changeset} ->
+        json(conn, AccidentQuery.default())
     end
   end
 
-  def index(conn, params) do
-    IO.inspect(params)
-    form = AccidentForm.new()
-    accidents = AccidentQuery.default()
-    render(conn, "index.html", accidents: accidents, form: form)
-  end
+  def data(conn, _params), do: json(conn, AccidentQuery.default())
+
+  def index(conn, _params), do: render(conn, "index.html", form: AccidentForm.new())
 end
