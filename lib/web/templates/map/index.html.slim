@@ -1,10 +1,15 @@
-.navbar
-  = render "_header.html", assigns
-.hero.is-fullheight-with-navbar
+.hero.is-fullheight
+  .hero-head
+    = render "_header.html", assigns
+  
   .hero-body
     .columns.is-flex
-      .column.is-narrow
+      .column.column-form
         = render "_form.html", assigns
       .column
         #map
 
+  .hero-foot
+    .container.is-fluid.has-text-centered.footer
+        a.subtitle href="https://www.adfc-nrw.de/kreisverbaende/kv-koeln/serviceseiten/impressum.html" Impressum
+        p © 2020 ADFC Kreisverband Köln e. V. 

@@ -76,15 +76,9 @@ const circleRadius = (maxCount) => {
 
   If no clusters are rendered yet (initial = True), it sets the paint properties with a default maxCount.
 */
-const setPaintSteps = (initial = false) => {
+const setPaintSteps = () => {
   const clusters = map.queryRenderedFeatures({ layers: [clusterLayerId] });
-  let maxCount = 1000
-
-  if (!initial) {
-    maxCount = clusters
-      .map(c => c.properties.point_count)
-      .reduce((a, b) => Math.max(a, b));
-  }
+  const maxCount = clusters.map(c => c.properties.point_count).reduce((a, b) => Math.max(a, b), 8);
 
   map.setPaintProperty(clusterLayerId, 'circle-color', circleColor(maxCount));
   map.setPaintProperty(clusterLayerId, 'circle-radius', circleRadius(maxCount));
@@ -180,11 +174,26 @@ map.on('load', () => {
     filter: ['!', ['has', 'point_count']],
     paint: {
       'circle-color': clusterColors[1],
-      'circle-radius': 3,
+      'circle-radius': clusterSizes[1],
       'circle-stroke-width': 1,
       'circle-stroke-color': '#fff'
     }
   });
 
-  setPaintSteps(true);
+  map.addLayer({
+    id: 'unclustered-point-count',
+    type: 'symbol',
+    source: dataSourceName,
+    filter: ['!', ['has', 'point_count']],
+    layout: {
+      'text-field': '1',
+      'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+      'text-size': 12
+    },
+    paint: {
+      'text-color': "#FFFFFF"
+    }
+  });
+
+  setPaintSteps();
 })
