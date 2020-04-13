@@ -23,8 +23,7 @@ secret_key_base =
     You can generate one by calling: mix phx.gen.secret
     """
 
-config :app, Web.Endpoint,
-  secret_key_base: secret_key_base
+config :app, Web.Endpoint, secret_key_base: secret_key_base
 
 live_view_signing_salt =
   System.get_env("LIVE_VIEW_SIGNING_SALT") ||
@@ -39,7 +38,7 @@ config :app, Web.Endpoint,
   ]
 
 _map_box_token =
-  System.get_env("MAPBOX_ACCESS_TOKEN" ||
+  System.get_env("MAPBOX_ACCESS_TOKEN") ||
     raise """
     environment variable MAPBOX_ACCESS_TOKEN is missing.
     You can get one on the Mapbox Website.

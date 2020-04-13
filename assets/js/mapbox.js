@@ -6,7 +6,8 @@ const accessToken = document.currentScript.getAttribute('accesstoken');
 
 // Some HTML identifiers to necessary elements
 const accidentFilterId = "accidentFilter";
-const isAccidentFilterVisible = window.getComputedStyle(document.getElementById(accidentFilterId)).display !== "none"
+const accidentFilterSubmitBtnId = "accidentFilterSubmitBtn";
+const isAccidentFilterVisible = window.getComputedStyle(document.getElementById(accidentFilterId)).display !== "none";
 
 // The cluster-color values from small to large clusters
 const clusterColors = ["#655fb6", "#cdcce1", "#5ea9f7", "#ef8633", "#e93223"]
@@ -17,6 +18,15 @@ const clusterSizes = [6, 8, 10, 11, 15]
 // Some config parameters for the MapBox GL JS map
 const dataSourceName = "accidents";
 const clusterLayerId = "clusters"
+
+const toggleButtonLoadingState = (isLoading) => {
+  const button = document.getElementById(accidentFilterSubmitBtnId)
+  if (isLoading) {
+    button.classList.add("is-loading")
+  } else {
+    button.classList.remove("is-loading")
+  }
+}
 
 /*
   Sets steps for the circle-color paint property of the cluster
@@ -113,19 +123,21 @@ window.addEventListener("load", function () {
   document.getElementById(accidentFilterId).addEventListener("submit", (e) => {
     e.preventDefault();
 
-    var form = document.getElementById(accidentFilterId);
-    const req = form.action + "?" + Array.from(
+    const form = document.getElementById(accidentFilterId);
+    const reqUrl = form.action + "?" + Array.from(
       new FormData(form),
       e => e.map(encodeURIComponent).join('=')
     ).join('&')
 
-    map.getSource(dataSourceName).setData(req)
-    window.toggleFilter();
+
+    toggleButtonLoadingState(true);
+
+    map.getSource(dataSourceName).setData(reqUrl)
   });
 });
 
 // Set the `color-radius` and `cluster-color` properties once all clusters are rendered
-map.on('idle', () => { setPaintSteps(); })
+map.on('idle', () => { setPaintSteps(); toggleButtonLoadingState(false); })
 
 // Setup the data-source and layers of the map
 map.on('load', () => {
