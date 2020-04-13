@@ -26,9 +26,9 @@ const circleColor = (max_count) => {
     ["exponential", 0.06],
     ['get', 'point_count'],
     0, "#655fb6",
-    Math.floor(max_count / 3), "#5ea9f7",
-    Math.floor(max_count / 2), "#efe433",
-    Math.floor(max_count / 1.5), "#ef8633",
+    Math.floor(max_count / 4), "#cdcce1",
+    Math.floor(max_count / 2), "#5ea9f7",
+    Math.floor(max_count / 4 * 3), "#ef8633",
     max_count, "#e93223"
   ]
 }
@@ -39,9 +39,9 @@ const circleRadius = (max_count) => {
     ["exponential", 0.05],
     ['get', 'point_count'],
     0, 6,
-    Math.floor(max_count / 3), 8,
+    Math.floor(max_count / 4), 8,
     Math.floor(max_count / 2), 11,
-    Math.floor(max_count / 3 * 2), 12,
+    Math.floor(max_count / 4 * 3), 11,
     max_count, 15
   ]
 }
