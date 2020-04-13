@@ -12,7 +12,7 @@ database_url =
     """
 
 config :app, App.Repo,
-  # ssl: true,
+  ssl: true,
   url: database_url,
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
 
@@ -24,7 +24,6 @@ secret_key_base =
     """
 
 config :app, Web.Endpoint,
-  http: [:inet6, port: String.to_integer(System.get_env("PORT") || "4000")],
   secret_key_base: secret_key_base
 
 live_view_signing_salt =
@@ -38,6 +37,13 @@ config :app, Web.Endpoint,
   live_view: [
     signing_salt: live_view_signing_salt
   ]
+
+_map_box_token =
+  System.get_env("MAPBOX_ACCESS_TOKEN" ||
+    raise """
+    environment variable MAPBOX_ACCESS_TOKEN is missing.
+    You can get one on the Mapbox Website.
+    """
 
 # ## Using releases (Elixir v1.9+)
 #
