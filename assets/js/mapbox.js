@@ -20,6 +20,28 @@ const map = new mapboxgl.Map({
   zoom: 12
 });
 
+const circleColor = (max_count) => {
+  return [
+    'interpolate',
+    ["linear"],
+    ['get', 'point_count'],
+    0, "#33E3FF",
+    Math.floor(max_count / 4), "#FCFF33",
+    Math.floor(max_count / 2), "#FFD733",
+    max_count, "#FF5833"
+  ]
+}
+
+const circleRadius = (max_count) => {
+  return [
+    'interpolate',
+    ["linear"],
+    ['get', 'point_count'],
+    0, 12,
+    max_count, 17
+  ]
+}
+
 const setColorSteps = (initial = false) => {
   const clusters = map.queryRenderedFeatures({ layers: ["clusters"] });
   let max_count = 1000
@@ -30,24 +52,11 @@ const setColorSteps = (initial = false) => {
       .reduce((a, b) => Math.max(a, b));
   }
 
-  map.setPaintProperty('clusters', 'circle-color', [
-    'interpolate',
-    ["linear"],
-    ['get', 'point_count'],
-    0, "#b2ebf2",
-    max_count, "#dd2c00"
-  ]);
-
-  map.setPaintProperty('clusters', 'circle-radius', [
-    'interpolate',
-    ["linear"],
-    ['get', 'point_count'],
-    0, 12,
-    max_count, 17
-  ])
+  map.setPaintProperty('clusters', 'circle-color', circleColor(max_count));
+  map.setPaintProperty('clusters', 'circle-radius', circleRadius(max_count));
 }
 
-map.on('load', function () {
+map.on('load', () => {
   map.addSource('accidents', {
     type: 'geojson',
     cluster: true,
@@ -65,23 +74,7 @@ map.on('load', function () {
     filter: ['has', 'point_count'],
     layout: {
       visibility: 'visible'
-    },
-    paint: {
-      'circle-color': [
-        'interpolate',
-        ["linear"],
-        ['get', 'point_count'],
-        0, "#b2ebf2",
-        1, "#dd2c00"
-      ],
-      'circle-radius': [
-        'interpolate',
-        ["linear"],
-        ['get', 'point_count'],
-        0, 10,
-        1, 17
-      ]
-    },
+    }
   });
 
   map.addLayer({
@@ -112,5 +105,4 @@ map.on('load', function () {
   setColorSteps(true);
 })
 
-map.on('move', (e) => setColorSteps())
-map.on('zoomend', (e) => setColorSteps())
+map.on('idle', () => { setColorSteps(); })

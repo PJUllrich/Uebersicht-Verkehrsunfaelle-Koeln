@@ -17,6 +17,24 @@ defmodule Web do
   and import those modules here.
   """
 
+  def form_object do
+    quote do
+      @me __MODULE__
+      use Ecto.Schema
+      import Ecto.Changeset, warn: false
+
+      def execute_validations(%Ecto.Changeset{} = changeset) do
+        form_data = apply_changes(changeset)
+
+        if changeset.valid? do
+          {:ok, change(form_data), form_data}
+        else
+          {:error, changeset, form_data}
+        end
+      end
+    end
+  end
+
   def controller do
     quote do
       use Phoenix.Controller, namespace: Web

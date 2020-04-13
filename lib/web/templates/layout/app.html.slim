@@ -8,7 +8,6 @@ html lang="en"
     link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet"
     link rel="stylesheet" href=Routes.static_path(@conn,"/css/app.css")
   body
-    = render "_header.html", assigns
     = render "_flashes.html", assigns
     = render @view_module, @view_template, assigns
     = csrf_meta_tag()

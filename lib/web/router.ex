@@ -17,7 +17,7 @@ defmodule Web.Router do
   scope "/", Web do
     pipe_through(:browser)
 
-    resources("/", MapController)
+    get("/", MapController, :index)
   end
 
   # Other scopes may use custom stacks.

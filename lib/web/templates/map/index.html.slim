@@ -1,4 +1,10 @@
-.section
-  .container.is-fluid
-    #map
+.navbar
+  = render "_header.html", assigns
+.hero.is-fullheight-with-navbar
+  .hero-body
+    .columns.is-flex
+      .column.is-narrow
+        = render "_form.html", assigns
+      .column
+        #map
 
