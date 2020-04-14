@@ -19,6 +19,14 @@ const clusterSizes = [6, 8, 10, 11, 15]
 const dataSourceName = "accidents";
 const clusterLayerId = "clusters"
 
+// Since MapBox GL JS doesn't have a proper "Everything is loaded and rendered"-Event
+// this is a workaround to track whether the map has reached the 'idle' state
+// in which the map is fully loaded and the clusters can be resized and colored based on their 
+// point_count.
+// Ref: https://github.com/mapbox/mapbox-gl-js/issues/1715
+let isFullyRendered = false
+
+// Shows or hides a Spinner in the "Submit"-Button
 const toggleButtonLoadingState = (isLoading) => {
   const button = document.getElementById(accidentFilterSubmitBtnId)
   if (isLoading) {
@@ -88,7 +96,7 @@ const setPaintSteps = () => {
 mapboxgl.accessToken = accessToken
 const map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/mapbox/light-v10',
+  style: 'mapbox://styles/mapbox/light-v10?opi',
   center: [6.961, 50.937],
   zoom: 12
 });
@@ -130,10 +138,20 @@ window.fetchData = (e) => {
 }
 
 // Set the `color-radius` and `cluster-color` properties once all clusters are rendered
-map.on('idle', () => { setPaintSteps(); toggleButtonLoadingState(false); })
+map.on('idle', () => {
+  if (isFullyRendered) return;
+
+  setPaintSteps();
+  toggleButtonLoadingState();
+  isFullyRendered = true;
+})
+
+map.on('zoomend', () => { isFullyRendered = false; })
 
 // Setup the data-source and layers of the map
 map.on('load', () => {
+  isFullyRendered = false;
+
   map.addSource(dataSourceName, {
     type: 'geojson',
     cluster: true,
