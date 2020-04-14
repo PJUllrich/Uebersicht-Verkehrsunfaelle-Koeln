@@ -113,22 +113,21 @@ window.toggleFilter = () => {
   and sets the request url as a new data source for the MapBox GL JS map,
   so that the map re-renders the data dynamically, making a page reload unnecessary.
 */
-window.addEventListener("load", function () {
-  document.getElementById(accidentFilterId).addEventListener("submit", (e) => {
-    e.preventDefault();
+window.fetchData = (e) => {
+  e.preventDefault();
 
-    const form = document.getElementById(accidentFilterId);
-    const reqUrl = form.action + "?" + Array.from(
-      new FormData(form),
-      e => e.map(encodeURIComponent).join('=')
-    ).join('&')
+  const form = document.getElementById(accidentFilterId);
+  const reqUrl = form.action + "?" + Array.from(
+    new FormData(form),
+    e => e.map(encodeURIComponent).join('=')
+  ).join('&')
 
+  toggleButtonLoadingState(true);
 
-    toggleButtonLoadingState(true);
+  map.getSource(dataSourceName).setData(reqUrl)
 
-    map.getSource(dataSourceName).setData(reqUrl)
-  });
-});
+  return false;
+}
 
 // Set the `color-radius` and `cluster-color` properties once all clusters are rendered
 map.on('idle', () => { setPaintSteps(); toggleButtonLoadingState(false); })

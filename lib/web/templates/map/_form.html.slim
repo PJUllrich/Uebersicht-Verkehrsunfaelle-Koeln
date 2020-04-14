@@ -1,5 +1,5 @@
 .form-container
-  = form_for @form, Routes.map_url(@conn, :data), [id: "accidentFilter", as: "q"], fn f ->
+  = form_for @form, Routes.map_url(@conn, :data), [id: "accidentFilter", as: "q", onsubmit: "return fetchData(event)"], fn f ->
     .field
       .control.is-expanded
         label.label Jahr des Unfalls
