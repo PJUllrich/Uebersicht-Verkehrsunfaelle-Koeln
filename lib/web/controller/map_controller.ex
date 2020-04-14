@@ -17,5 +17,17 @@ defmodule Web.MapController do
 
   def data(conn, _params), do: json(conn, AccidentQuery.default())
 
+  # Some Browser don't support intercepting a form submit
+  # and will perform a POST to the /api/list endpoint.
+  # We intercept this request here and redirect to the index page
+  # which injects the query url to the MapBox GL JS library.
+  def data_fallback(conn, %{"q" => query}),
+    do: redirect(conn, to: Routes.map_path(conn, :index, q: query))
+
+  def index(conn, %{"q" => query}) do
+    endpoint = Routes.map_url(conn, :data, q: query)
+    render(conn, "index.html", form: AccidentForm.new(query), endpoint: endpoint)
+  end
+
   def index(conn, _params), do: render(conn, "index.html", form: AccidentForm.new())
 end

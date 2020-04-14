@@ -17,6 +17,7 @@ defmodule Web.Router do
     pipe_through(:browser)
 
     get("/", MapController, :index)
+    post("/api/list", MapController, :data_fallback)
   end
 
   scope "/api", Web do
