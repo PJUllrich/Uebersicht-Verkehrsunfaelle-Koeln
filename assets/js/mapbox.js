@@ -16,8 +16,16 @@ const clusterColors = ["#655fb6", "#cdcce1", "#5ea9f7", "#ef8633", "#e93223"]
 const clusterSizes = [6, 8, 10, 11, 15]
 
 // Some config parameters for the MapBox GL JS map
-const dataSourceName = "accidents";
-const clusterLayerId = "clusters"
+const clusterDataSource = "accidents-cluster";
+const heatmapDataSource = "accidents-heatmap"
+
+const clusterLayerId = "cluster-points"
+const clusterLayerCounts = "cluster-counts"
+const clusterLayerUnclusteredPoints = "unclustered-points"
+const clusterLayerUnclusteredCount = "unclustered-counts"
+
+const heatmapLayerId = "heatmap"
+const heatmapLayerStreets = "heatmap-streets"
 
 // Since MapBox GL JS doesn't have a proper "Everything is loaded and rendered"-Event
 // this is a workaround to track whether the map has reached the 'idle' state
@@ -26,8 +34,10 @@ const clusterLayerId = "clusters"
 // Ref: https://github.com/mapbox/mapbox-gl-js/issues/1715
 let isFullyRendered = false
 
+let showHeatmap = false
+
 // Shows or hides a Spinner in the "Submit"-Button
-const toggleButtonLoadingState = (isLoading) => {
+const setButtonIsLoading = (isLoading) => {
   const button = document.getElementById(accidentFilterSubmitBtnId)
   if (isLoading) {
     button.classList.add("is-loading")
@@ -96,7 +106,7 @@ const setPaintSteps = () => {
 mapboxgl.accessToken = accessToken
 const map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/mapbox/light-v10?opi',
+  style: 'mapbox://styles/mapbox/light-v10',
   center: [6.961, 50.937],
   zoom: 12
 });
@@ -130,39 +140,44 @@ window.fetchData = (e) => {
     e => e.map(encodeURIComponent).join('=')
   ).join('&')
 
-  toggleButtonLoadingState(true);
+  setButtonIsLoading(true);
 
-  map.getSource(dataSourceName).setData(reqUrl)
+  map.getSource(clusterDataSource).setData(reqUrl)
+  map.getSource(heatmapDataSource).setData(reqUrl)
+
+  setButtonIsLoading(false);
 
   return false;
 }
 
-// Set the `color-radius` and `cluster-color` properties once all clusters are rendered
-map.on('idle', () => {
-  if (isFullyRendered) return;
+window.toggleHeatmap = () => {
+  showHeatmap = !showHeatmap
+  if (showHeatmap) {
+    removeClusterLayers()
+    addHeatmapLayers()
+  } else {
+    removeHeatmapLayers()
+    addClusterLayers()
+  }
+}
 
-  setPaintSteps();
-  toggleButtonLoadingState();
-  isFullyRendered = true;
-})
+const removeClusterLayers = () => {
+  map.removeLayer(clusterLayerId)
+  map.removeLayer(clusterLayerCounts)
+  map.removeLayer(clusterLayerUnclusteredPoints)
+  map.removeLayer(clusterLayerUnclusteredCount)
+}
 
-map.on('zoomend', () => { isFullyRendered = false; })
+const removeHeatmapLayers = () => {
+  map.removeLayer(heatmapLayerId)
+  map.removeLayer(heatmapLayerStreets)
+}
 
-// Setup the data-source and layers of the map
-map.on('load', () => {
-  isFullyRendered = false;
-
-  map.addSource(dataSourceName, {
-    type: 'geojson',
-    cluster: true,
-    clusterMaxZoom: 18,
-    clusterRadius: 20,
-    data: accidentsEndpoint
-  });
+const addClusterLayers = () => {
   map.addLayer({
     id: clusterLayerId,
     type: 'circle',
-    source: dataSourceName,
+    source: clusterDataSource,
     filter: ['has', 'point_count'],
     layout: {
       visibility: 'visible'
@@ -170,9 +185,9 @@ map.on('load', () => {
   });
 
   map.addLayer({
-    id: 'cluster-count',
+    id: clusterLayerCounts,
     type: 'symbol',
-    source: dataSourceName,
+    source: clusterDataSource,
     filter: ['has', 'point_count'],
     layout: {
       'text-field': '{point_count}',
@@ -185,9 +200,9 @@ map.on('load', () => {
   });
 
   map.addLayer({
-    id: 'unclustered-point',
+    id: clusterLayerUnclusteredPoints,
     type: 'circle',
-    source: dataSourceName,
+    source: clusterDataSource,
     filter: ['!', ['has', 'point_count']],
     paint: {
       'circle-color': clusterColors[1],
@@ -198,9 +213,9 @@ map.on('load', () => {
   });
 
   map.addLayer({
-    id: 'unclustered-point-count',
+    id: clusterLayerUnclusteredCount,
     type: 'symbol',
-    source: dataSourceName,
+    source: clusterDataSource,
     filter: ['!', ['has', 'point_count']],
     layout: {
       'text-field': '1',
@@ -213,4 +228,82 @@ map.on('load', () => {
   });
 
   setPaintSteps();
+}
+
+const addHeatmapLayers = () => {
+  map.addLayer({
+    'id': heatmapLayerStreets,
+    'type': 'line',
+    'source': 'mapbox-streets',
+    'source-layer': 'road',
+    'layout': {
+      'line-join': 'round',
+      'line-cap': 'round'
+    },
+    'paint': {
+      'line-color': "#C6D2F6",
+      'line-width': 1
+    }
+  });
+
+  map.addLayer({
+    id: heatmapLayerId,
+    type: 'heatmap',
+    source: heatmapDataSource,
+    paint: {
+      'heatmap-radius': 5,
+      'heatmap-weight': 0.4,
+      'heatmap-intensity': [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        0, 1,
+        9, 3
+      ],
+      'heatmap-radius': [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        0, 2,
+        12, 5
+      ]
+    }
+  });
+}
+
+// Set the `color-radius` and `cluster-color` properties once all clusters are rendered
+map.on('idle', () => {
+  if (isFullyRendered) return;
+
+  if (!showHeatmap) setPaintSteps();
+
+  setButtonIsLoading(false);
+  isFullyRendered = true;
+})
+
+// Setup the data-source and layers of the map
+map.on('load', () => {
+  map.addSource(clusterDataSource, {
+    type: 'geojson',
+    cluster: true,
+    clusterMaxZoom: 18,
+    clusterRadius: 20,
+    data: accidentsEndpoint
+  });
+
+  map.addSource(heatmapDataSource, {
+    type: 'geojson',
+    data: accidentsEndpoint
+  });
+
+  map.addSource('mapbox-streets', {
+    type: 'vector',
+    url: 'mapbox://mapbox.mapbox-streets-v8'
+  });
+
+  if (showHeatmap) {
+    addHeatmapLayers()
+  } else {
+    addClusterLayers()
+  }
 })

@@ -1,4 +1,9 @@
 .form-container
+  
+  label.checkbox
+    input type="checkbox" onclick="toggleHeatmap()"
+    Zeige Heatmap
+
   = form_for @form, Routes.map_url(@conn, :data), [id: "accidentFilter", as: "q", onsubmit: "return fetchData(event)"], fn f ->
     .field
       .control.is-expanded
