@@ -1,35 +1,35 @@
-import mapboxgl from 'mapbox-gl';
+import mapboxgl from 'mapbox-gl'
 
 // Receive config parameter from the app.html layout template
-const accidentsEndpoint = document.currentScript.getAttribute('endpoint');
-const accessToken = document.currentScript.getAttribute('accesstoken');
+const accidentsEndpoint = document.currentScript.getAttribute('endpoint')
+const accessToken = document.currentScript.getAttribute('accesstoken')
 
 // Some HTML identifiers to necessary elements
-const accidentFilterId = "accidentFilter";
-const accidentFilterSubmitBtnId = "accidentFilterSubmitBtn";
-const isAccidentFilterVisible = window.getComputedStyle(document.getElementById(accidentFilterId)).display !== "none";
+const accidentFilterId = 'accidentFilter'
+const accidentFilterSubmitBtnId = 'accidentFilterSubmitBtn'
+const isAccidentFilterVisible = window.getComputedStyle(document.getElementById(accidentFilterId)).display !== 'none'
 
 // The cluster-color values from small to large clusters
-const clusterColors = ["#655fb6", "#cdcce1", "#5ea9f7", "#ef8633", "#e93223"]
+const clusterColors = ['#655fb6', '#cdcce1', '#5ea9f7', '#ef8633', '#e93223']
 
 // The cluster-size values from small to large clusters (unit is px)
 const clusterSizes = [6, 8, 10, 11, 15]
 
 // Some config parameters for the MapBox GL JS map
-const clusterDataSource = "accidents-cluster";
-const heatmapDataSource = "accidents-heatmap"
+const clusterDataSource = 'accidents-cluster'
+const heatmapDataSource = 'accidents-heatmap'
 
-const clusterLayerId = "cluster-points"
-const clusterLayerCounts = "cluster-counts"
-const clusterLayerUnclusteredPoints = "unclustered-points"
-const clusterLayerUnclusteredCount = "unclustered-counts"
+const clusterLayerId = 'cluster-points'
+const clusterLayerCounts = 'cluster-counts'
+const clusterLayerUnclusteredPoints = 'unclustered-points'
+const clusterLayerUnclusteredCount = 'unclustered-counts'
 
-const heatmapLayerId = "heatmap"
-const heatmapLayerStreets = "heatmap-streets"
+const heatmapLayerId = 'heatmap'
+const heatmapLayerStreets = 'heatmap-streets'
 
 // Since MapBox GL JS doesn't have a proper "Everything is loaded and rendered"-Event
 // this is a workaround to track whether the map has reached the 'idle' state
-// in which the map is fully loaded and the clusters can be resized and colored based on their 
+// in which the map is fully loaded and the clusters can be resized and colored based on their
 // point_count.
 // Ref: https://github.com/mapbox/mapbox-gl-js/issues/1715
 let isFullyRendered = false
@@ -40,9 +40,9 @@ let showHeatmap = false
 const setButtonIsLoading = (isLoading) => {
   const button = document.getElementById(accidentFilterSubmitBtnId)
   if (isLoading) {
-    button.classList.add("is-loading")
+    button.classList.add('is-loading')
   } else {
-    button.classList.remove("is-loading")
+    button.classList.remove('is-loading')
   }
 }
 
@@ -56,7 +56,7 @@ const setButtonIsLoading = (isLoading) => {
 const circleColor = (maxCount) => {
   return [
     'interpolate',
-    ["exponential", 0.06],
+    ['exponential', 0.06],
     ['get', 'point_count'],
     -1, clusterColors[0],
     Math.floor(maxCount / 4), clusterColors[1],
@@ -67,22 +67,22 @@ const circleColor = (maxCount) => {
 }
 
 /*
-  Sets steps for the circle-radius paint property of the cluster 
-  marker based on the maximum point_count of all clusters. 
-  The scale starts at -1 since MapBox would throw an Error if 
+  Sets steps for the circle-radius paint property of the cluster
+  marker based on the maximum point_count of all clusters.
+  The scale starts at -1 since MapBox would throw an Error if
   Math.floor(maxCount / 4) is equal to 0, which would result
   in duplicate steps (2x "0") .
 */
 const circleRadius = (maxCount) => {
   return [
     'interpolate',
-    ["exponential", 0.06],
+    ['exponential', 0.06],
     ['get', 'point_count'],
     -1, clusterSizes[0],
     Math.floor(maxCount / 4), clusterSizes[1],
     Math.floor(maxCount / 2), clusterSizes[2],
     Math.floor(maxCount / 4 * 3), clusterSizes[3],
-    maxCount, clusterSizes[4],
+    maxCount, clusterSizes[4]
   ]
 }
 
@@ -95,11 +95,11 @@ const circleRadius = (maxCount) => {
   If no clusters are rendered yet (initial = True), it sets the paint properties with a default maxCount.
 */
 const setPaintSteps = () => {
-  const clusters = map.queryRenderedFeatures({ layers: [clusterLayerId] });
-  const maxCount = clusters.map(c => c.properties.point_count).reduce((a, b) => Math.max(a, b), 8);
+  const clusters = map.queryRenderedFeatures({ layers: [clusterLayerId] })
+  const maxCount = clusters.map(c => c.properties.point_count).reduce((a, b) => Math.max(a, b), 8)
 
-  map.setPaintProperty(clusterLayerId, 'circle-color', circleColor(maxCount));
-  map.setPaintProperty(clusterLayerId, 'circle-radius', circleRadius(maxCount));
+  map.setPaintProperty(clusterLayerId, 'circle-color', circleColor(maxCount))
+  map.setPaintProperty(clusterLayerId, 'circle-radius', circleRadius(maxCount))
 }
 
 // Sets up a new MapBox GL JS map centered on Cologne, Germany
@@ -109,7 +109,7 @@ const map = new mapboxgl.Map({
   style: 'mapbox://styles/mapbox/light-v10',
   center: [6.961, 50.937],
   zoom: 12
-});
+})
 
 /*
   A global function to show and hide the accident filter form.
@@ -120,10 +120,10 @@ const map = new mapboxgl.Map({
   is therefore not on a mobile device, then make this function no-op.
 */
 window.toggleFilter = () => {
-  if (isAccidentFilterVisible) return;
+  if (isAccidentFilterVisible) return
 
   const el = document.getElementById(accidentFilterId)
-  el.style.display = el.style.display === "block" ? "none" : "block";
+  el.style.display = el.style.display === 'block' ? 'none' : 'block'
 }
 
 /*
@@ -132,22 +132,22 @@ window.toggleFilter = () => {
   so that the map re-renders the data dynamically, making a page reload unnecessary.
 */
 window.fetchData = (e) => {
-  e.preventDefault();
+  e.preventDefault()
 
-  const form = document.getElementById(accidentFilterId);
-  const reqUrl = form.action + "?" + Array.from(
+  const form = document.getElementById(accidentFilterId)
+  const reqUrl = form.action + '?' + Array.from(
     new FormData(form),
     e => e.map(encodeURIComponent).join('=')
   ).join('&')
 
-  setButtonIsLoading(true);
+  setButtonIsLoading(true)
 
   map.getSource(clusterDataSource).setData(reqUrl)
   map.getSource(heatmapDataSource).setData(reqUrl)
 
-  setButtonIsLoading(false);
+  setButtonIsLoading(false)
 
-  return false;
+  return false
 }
 
 window.toggleHeatmap = () => {
@@ -159,6 +159,8 @@ window.toggleHeatmap = () => {
     removeHeatmapLayers()
     addClusterLayers()
   }
+
+  isFullyRendered = false
 }
 
 const removeClusterLayers = () => {
@@ -182,7 +184,7 @@ const addClusterLayers = () => {
     layout: {
       visibility: 'visible'
     }
-  });
+  })
 
   map.addLayer({
     id: clusterLayerCounts,
@@ -195,9 +197,9 @@ const addClusterLayers = () => {
       'text-size': 12
     },
     paint: {
-      'text-color': "#FFFFFF"
+      'text-color': '#FFFFFF'
     }
-  });
+  })
 
   map.addLayer({
     id: clusterLayerUnclusteredPoints,
@@ -210,7 +212,7 @@ const addClusterLayers = () => {
       'circle-stroke-width': 1,
       'circle-stroke-color': '#fff'
     }
-  });
+  })
 
   map.addLayer({
     id: clusterLayerUnclusteredCount,
@@ -223,28 +225,28 @@ const addClusterLayers = () => {
       'text-size': 12
     },
     paint: {
-      'text-color': "#FFFFFF"
+      'text-color': '#FFFFFF'
     }
-  });
+  })
 
-  setPaintSteps();
+  setPaintSteps()
 }
 
 const addHeatmapLayers = () => {
   map.addLayer({
-    'id': heatmapLayerStreets,
-    'type': 'line',
-    'source': 'mapbox-streets',
+    id: heatmapLayerStreets,
+    type: 'line',
+    source: 'mapbox-streets',
     'source-layer': 'road',
-    'layout': {
+    layout: {
       'line-join': 'round',
       'line-cap': 'round'
     },
-    'paint': {
-      'line-color': "#C6D2F6",
+    paint: {
+      'line-color': '#C6D2F6',
       'line-width': 1
     }
-  });
+  })
 
   map.addLayer({
     id: heatmapLayerId,
@@ -259,26 +261,19 @@ const addHeatmapLayers = () => {
         ['zoom'],
         0, 1,
         9, 3
-      ],
-      'heatmap-radius': [
-        'interpolate',
-        ['linear'],
-        ['zoom'],
-        0, 2,
-        12, 5
       ]
     }
-  });
+  })
 }
 
 // Set the `color-radius` and `cluster-color` properties once all clusters are rendered
 map.on('idle', () => {
-  if (isFullyRendered) return;
+  if (isFullyRendered) return
 
-  if (!showHeatmap) setPaintSteps();
+  if (!showHeatmap) setPaintSteps()
 
-  setButtonIsLoading(false);
-  isFullyRendered = true;
+  setButtonIsLoading(false)
+  isFullyRendered = true
 })
 
 // Setup the data-source and layers of the map
@@ -289,17 +284,17 @@ map.on('load', () => {
     clusterMaxZoom: 18,
     clusterRadius: 20,
     data: accidentsEndpoint
-  });
+  })
 
   map.addSource(heatmapDataSource, {
     type: 'geojson',
     data: accidentsEndpoint
-  });
+  })
 
   map.addSource('mapbox-streets', {
     type: 'vector',
     url: 'mapbox://mapbox.mapbox-streets-v8'
-  });
+  })
 
   if (showHeatmap) {
     addHeatmapLayers()
