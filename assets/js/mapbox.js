@@ -7,7 +7,6 @@ const accessToken = document.currentScript.getAttribute('accesstoken')
 // Some HTML identifiers to necessary elements
 const accidentFilterId = 'accidentFilter'
 const accidentFilterSubmitBtnId = 'accidentFilterSubmitBtn'
-const isAccidentFilterVisible = window.getComputedStyle(document.getElementById(accidentFilterId)).display !== 'none'
 
 // The cluster-color values from small to large clusters
 const clusterColors = ['#655fb6', '#cdcce1', '#5ea9f7', '#ef8633', '#e93223']
@@ -36,71 +35,7 @@ let isFullyRendered = false
 
 let showHeatmap = false
 
-// Shows or hides a Spinner in the "Submit"-Button
-const setButtonIsLoading = (isLoading) => {
-  const button = document.getElementById(accidentFilterSubmitBtnId)
-  if (isLoading) {
-    button.classList.add('is-loading')
-  } else {
-    button.classList.remove('is-loading')
-  }
-}
-
-/*
-  Sets steps for the circle-color paint property of the cluster
-  marker based on the maximum point_count of all clusters.
-  The scale starts at -1 since MapBox would throw an Error if
-  Math.floor(maxCount / 4) is equal to 0, which would result
-  in duplicate steps (2x "0").
-*/
-const circleColor = (maxCount) => {
-  return [
-    'interpolate',
-    ['exponential', 0.06],
-    ['get', 'point_count'],
-    -1, clusterColors[0],
-    Math.floor(maxCount / 4), clusterColors[1],
-    Math.floor(maxCount / 2), clusterColors[2],
-    Math.floor(maxCount / 4 * 3), clusterColors[3],
-    maxCount, clusterColors[4]
-  ]
-}
-
-/*
-  Sets steps for the circle-radius paint property of the cluster
-  marker based on the maximum point_count of all clusters.
-  The scale starts at -1 since MapBox would throw an Error if
-  Math.floor(maxCount / 4) is equal to 0, which would result
-  in duplicate steps (2x "0") .
-*/
-const circleRadius = (maxCount) => {
-  return [
-    'interpolate',
-    ['exponential', 0.06],
-    ['get', 'point_count'],
-    -1, clusterSizes[0],
-    Math.floor(maxCount / 4), clusterSizes[1],
-    Math.floor(maxCount / 2), clusterSizes[2],
-    Math.floor(maxCount / 4 * 3), clusterSizes[3],
-    maxCount, clusterSizes[4]
-  ]
-}
-
-/*
-  Retrieves all currently rendered clusters (also out-of-viewport)
-  and calculates the maximum point_count of all clusters.
-
-  Eventually, sets the `circle-color` and `circle-radius` paint properties.
-
-  If no clusters are rendered yet (initial = True), it sets the paint properties with a default maxCount.
-*/
-const setPaintSteps = () => {
-  const clusters = map.queryRenderedFeatures({ layers: [clusterLayerId] })
-  const maxCount = clusters.map(c => c.properties.point_count).reduce((a, b) => Math.max(a, b), 8)
-
-  map.setPaintProperty(clusterLayerId, 'circle-color', circleColor(maxCount))
-  map.setPaintProperty(clusterLayerId, 'circle-radius', circleRadius(maxCount))
-}
+const isAccidentFilterVisible = window.getComputedStyle(document.getElementById(accidentFilterId)).display !== 'none'
 
 // Sets up a new MapBox GL JS map centered on Cologne, Germany
 mapboxgl.accessToken = accessToken
@@ -110,70 +45,6 @@ const map = new mapboxgl.Map({
   center: [6.961, 50.937],
   zoom: 12
 })
-
-/*
-  A global function to show and hide the accident filter form.
-  Is used by the navigation-burger in the navbar to show/hide the form
-  on mobile devices.
-
-  If the accident filter form was visible on page load and the user
-  is therefore not on a mobile device, then make this function no-op.
-*/
-window.toggleFilter = () => {
-  if (isAccidentFilterVisible) return
-
-  const el = document.getElementById(accidentFilterId)
-  el.style.display = el.style.display === 'block' ? 'none' : 'block'
-}
-
-/*
-  Intercepts the accident filter form, extracts the query parameters
-  and sets the request url as a new data source for the MapBox GL JS map,
-  so that the map re-renders the data dynamically, making a page reload unnecessary.
-*/
-window.fetchData = (e) => {
-  e.preventDefault()
-
-  const form = document.getElementById(accidentFilterId)
-  const reqUrl = form.action + '?' + Array.from(
-    new FormData(form),
-    e => e.map(encodeURIComponent).join('=')
-  ).join('&')
-
-  setButtonIsLoading(true)
-
-  map.getSource(clusterDataSource).setData(reqUrl)
-  map.getSource(heatmapDataSource).setData(reqUrl)
-
-  setButtonIsLoading(false)
-
-  return false
-}
-
-window.toggleHeatmap = () => {
-  showHeatmap = !showHeatmap
-  if (showHeatmap) {
-    removeClusterLayers()
-    addHeatmapLayers()
-  } else {
-    removeHeatmapLayers()
-    addClusterLayers()
-  }
-
-  isFullyRendered = false
-}
-
-const removeClusterLayers = () => {
-  map.removeLayer(clusterLayerId)
-  map.removeLayer(clusterLayerCounts)
-  map.removeLayer(clusterLayerUnclusteredPoints)
-  map.removeLayer(clusterLayerUnclusteredCount)
-}
-
-const removeHeatmapLayers = () => {
-  map.removeLayer(heatmapLayerId)
-  map.removeLayer(heatmapLayerStreets)
-}
 
 const addClusterLayers = () => {
   map.addLayer({
@@ -266,6 +137,18 @@ const addHeatmapLayers = () => {
   })
 }
 
+const removeClusterLayers = () => {
+  map.removeLayer(clusterLayerId)
+  map.removeLayer(clusterLayerCounts)
+  map.removeLayer(clusterLayerUnclusteredPoints)
+  map.removeLayer(clusterLayerUnclusteredCount)
+}
+
+const removeHeatmapLayers = () => {
+  map.removeLayer(heatmapLayerId)
+  map.removeLayer(heatmapLayerStreets)
+}
+
 // Set the `color-radius` and `cluster-color` properties once all clusters are rendered
 map.on('idle', () => {
   if (isFullyRendered) return
@@ -302,3 +185,121 @@ map.on('load', () => {
     addClusterLayers()
   }
 })
+
+/*
+  A global function to show and hide the accident filter form.
+  Is used by the navigation-burger in the navbar to show/hide the form
+  on mobile devices.
+
+  If the accident filter form was visible on page load and the user
+  is therefore not on a mobile device, then make this function no-op.
+*/
+window.toggleFilter = () => {
+  if (isAccidentFilterVisible) return
+
+  const el = document.getElementById(accidentFilterId)
+  el.style.display = el.style.display === 'block' ? 'none' : 'block'
+}
+
+window.toggleHeatmap = () => {
+  showHeatmap = !showHeatmap
+  if (showHeatmap) {
+    removeClusterLayers()
+    addHeatmapLayers()
+  } else {
+    removeHeatmapLayers()
+    addClusterLayers()
+  }
+
+  isFullyRendered = false
+}
+
+/*
+  Intercepts the accident filter form, extracts the query parameters
+  and sets the request url as a new data source for the MapBox GL JS map,
+  so that the map re-renders the data dynamically, making a page reload unnecessary.
+*/
+window.fetchData = (e) => {
+  e.preventDefault()
+
+  const form = document.getElementById(accidentFilterId)
+  const reqUrl = form.action + '?' + Array.from(
+    new FormData(form),
+    e => e.map(encodeURIComponent).join('=')
+  ).join('&')
+
+  setButtonIsLoading(true)
+
+  map.getSource(clusterDataSource).setData(reqUrl)
+  map.getSource(heatmapDataSource).setData(reqUrl)
+
+  setButtonIsLoading(false)
+
+  return false
+}
+
+// Shows or hides a Spinner in the "Submit"-Button
+const setButtonIsLoading = (isLoading) => {
+  const button = document.getElementById(accidentFilterSubmitBtnId)
+  if (isLoading) {
+    button.classList.add('is-loading')
+  } else {
+    button.classList.remove('is-loading')
+  }
+}
+
+/*
+  Sets steps for the circle-color paint property of the cluster
+  marker based on the maximum point_count of all clusters.
+  The scale starts at -1 since MapBox would throw an Error if
+  Math.floor(maxCount / 4) is equal to 0, which would result
+  in duplicate steps (2x "0").
+*/
+const circleColor = (maxCount) => {
+  return [
+    'interpolate',
+    ['exponential', 0.06],
+    ['get', 'point_count'],
+    -1, clusterColors[0],
+    Math.floor(maxCount / 4), clusterColors[1],
+    Math.floor(maxCount / 2), clusterColors[2],
+    Math.floor(maxCount / 4 * 3), clusterColors[3],
+    maxCount, clusterColors[4]
+  ]
+}
+
+/*
+  Sets steps for the circle-radius paint property of the cluster
+  marker based on the maximum point_count of all clusters.
+  The scale starts at -1 since MapBox would throw an Error if
+  Math.floor(maxCount / 4) is equal to 0, which would result
+  in duplicate steps (2x "0") .
+*/
+const circleRadius = (maxCount) => {
+  return [
+    'interpolate',
+    ['exponential', 0.06],
+    ['get', 'point_count'],
+    -1, clusterSizes[0],
+    Math.floor(maxCount / 4), clusterSizes[1],
+    Math.floor(maxCount / 2), clusterSizes[2],
+    Math.floor(maxCount / 4 * 3), clusterSizes[3],
+    maxCount, clusterSizes[4]
+  ]
+}
+
+/*
+  Retrieves all currently rendered clusters (also out-of-viewport)
+  and calculates the maximum point_count of all clusters.
+
+  Eventually, sets the `circle-color` and `circle-radius` paint properties.
+
+  If no clusters are rendered yet (initial = True), it sets the paint properties with a default maxCount.
+*/
+const setPaintSteps = () => {
+  const clusters = map.queryRenderedFeatures({ layers: [clusterLayerId] })
+  const maxCount = clusters.map(c => c.properties.point_count).reduce((a, b) => Math.max(a, b), 8)
+
+  map.setPaintProperty(clusterLayerId, 'circle-color', circleColor(maxCount))
+  map.setPaintProperty(clusterLayerId, 'circle-radius', circleRadius(maxCount))
+}
