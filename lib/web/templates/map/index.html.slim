@@ -3,13 +3,11 @@
     = render "_header.html", assigns
   
   .hero-body
-    .columns.is-flex
-      .column.column-form
+    .content
+      .content-column.content-form
         = render "_form.html", assigns
-      .column
+      .content-column.content-map
         #map
 
   .hero-foot
-    .container.is-fluid.has-text-centered.footer
-        a.subtitle href="https://www.adfc-nrw.de/kreisverbaende/kv-koeln/serviceseiten/impressum.html" Impressum
-        p © 2020 ADFC Kreisverband Köln e. V. 
+    = render "_footer.html", assigns

@@ -1,0 +1,57 @@
+@import "bulma"
+
+.hero-head
+  .navbar
+    padding-left: 0.3rem
+
+    .logo
+      padding-top: 1rem
+
+.hero-body
+  padding: 0
+  align-items: stretch !important
+
+  .content
+    display: flex
+    width: 100%
+
+    &-form
+      padding: 1rem
+
+      form
+        padding-top: 1rem
+
+        .checkbox label
+          padding-left: 0.4rem
+
+    &-map
+      flex: 1
+
+      #map
+        height: 100%
+
+.hero-foot
+  text-align: center
+  padding: 0.3rem 0
+  font-size: 0.8rem
+
+  .links a
+    margin-left: 0.5rem
+    color: inherit
+    text-decoration: underline
+
+#accidentFilter
+  display: block
+
+#toggleFilterBtn
+  display: none
+
+@media (max-width: $tablet)
+  .hero-body .content
+    flex-direction: column
+
+  #accidentFilter
+    display: none
+
+  #toggleFilterBtn
+    display: block
