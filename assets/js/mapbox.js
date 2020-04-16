@@ -1,3 +1,4 @@
+import 'regenerator-runtime'
 import mapboxgl from 'mapbox-gl'
 
 // Receive config parameter from the app.html layout template
@@ -37,14 +38,70 @@ let showHeatmap = false
 
 const isAccidentFilterVisible = window.getComputedStyle(document.getElementById(accidentFilterId)).display !== 'none'
 
-// Sets up a new MapBox GL JS map centered on Cologne, Germany
-mapboxgl.accessToken = accessToken
-const map = new mapboxgl.Map({
-  container: 'map',
-  style: 'mapbox://styles/mapbox/light-v10',
-  center: [6.961, 50.937],
-  zoom: 12
-})
+// Shows or hides a Spinner in the "Submit"-Button
+const setButtonIsLoading = (isLoading) => {
+  const button = document.getElementById(accidentFilterSubmitBtnId)
+  if (isLoading) {
+    button.classList.add('is-loading')
+  } else {
+    button.classList.remove('is-loading')
+  }
+}
+
+/*
+  Retrieves all currently rendered clusters (also out-of-viewport)
+  and calculates the maximum point_count of all clusters.
+
+  Eventually, sets the `circle-color` and `circle-radius` paint properties.
+
+  If no clusters are rendered yet (initial = True), it sets the paint properties with a default maxCount.
+*/
+const setPaintSteps = () => {
+  const clusters = map.queryRenderedFeatures({ layers: [clusterLayerId] })
+  const maxCount = clusters.map(c => c.properties.point_count).reduce((a, b) => Math.max(a, b), 8)
+
+  map.setPaintProperty(clusterLayerId, 'circle-color', circleColor(maxCount))
+  map.setPaintProperty(clusterLayerId, 'circle-radius', circleRadius(maxCount))
+}
+/*
+  Sets steps for the circle-color paint property of the cluster
+  marker based on the maximum point_count of all clusters.
+  The scale starts at -1 since MapBox would throw an Error if
+  Math.floor(maxCount / 4) is equal to 0, which would result
+  in duplicate steps (2x "0").
+*/
+const circleColor = (maxCount) => {
+  return [
+    'interpolate',
+    ['exponential', 0.06],
+    ['get', 'point_count'],
+    -1, clusterColors[0],
+    Math.floor(maxCount / 4), clusterColors[1],
+    Math.floor(maxCount / 2), clusterColors[2],
+    Math.floor(maxCount / 4 * 3), clusterColors[3],
+    maxCount, clusterColors[4]
+  ]
+}
+
+/*
+  Sets steps for the circle-radius paint property of the cluster
+  marker based on the maximum point_count of all clusters.
+  The scale starts at -1 since MapBox would throw an Error if
+  Math.floor(maxCount / 4) is equal to 0, which would result
+  in duplicate steps (2x "0") .
+*/
+const circleRadius = (maxCount) => {
+  return [
+    'interpolate',
+    ['exponential', 0.06],
+    ['get', 'point_count'],
+    -1, clusterSizes[0],
+    Math.floor(maxCount / 4), clusterSizes[1],
+    Math.floor(maxCount / 2), clusterSizes[2],
+    Math.floor(maxCount / 4 * 3), clusterSizes[3],
+    maxCount, clusterSizes[4]
+  ]
+}
 
 const addClusterLayers = () => {
   map.addLayer({
@@ -149,6 +206,15 @@ const removeHeatmapLayers = () => {
   map.removeLayer(heatmapLayerStreets)
 }
 
+// Sets up a new MapBox GL JS map centered on Cologne, Germany
+mapboxgl.accessToken = accessToken
+const map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/light-v10',
+  center: [6.961, 50.937],
+  zoom: 12
+})
+
 // Set the `color-radius` and `cluster-color` properties once all clusters are rendered
 map.on('idle', () => {
   if (isFullyRendered) return
@@ -160,18 +226,21 @@ map.on('idle', () => {
 })
 
 // Setup the data-source and layers of the map
-map.on('load', () => {
+map.on('load', async () => {
+  const res = await fetch(accidentsEndpoint)
+  const data = await res.json()
+
   map.addSource(clusterDataSource, {
     type: 'geojson',
     cluster: true,
     clusterMaxZoom: 18,
     clusterRadius: 20,
-    data: accidentsEndpoint
+    data: data
   })
 
   map.addSource(heatmapDataSource, {
     type: 'geojson',
-    data: accidentsEndpoint
+    data: data
   })
 
   map.addSource('mapbox-streets', {
@@ -236,70 +305,4 @@ window.fetchData = (e) => {
   setButtonIsLoading(false)
 
   return false
-}
-
-// Shows or hides a Spinner in the "Submit"-Button
-const setButtonIsLoading = (isLoading) => {
-  const button = document.getElementById(accidentFilterSubmitBtnId)
-  if (isLoading) {
-    button.classList.add('is-loading')
-  } else {
-    button.classList.remove('is-loading')
-  }
-}
-
-/*
-  Sets steps for the circle-color paint property of the cluster
-  marker based on the maximum point_count of all clusters.
-  The scale starts at -1 since MapBox would throw an Error if
-  Math.floor(maxCount / 4) is equal to 0, which would result
-  in duplicate steps (2x "0").
-*/
-const circleColor = (maxCount) => {
-  return [
-    'interpolate',
-    ['exponential', 0.06],
-    ['get', 'point_count'],
-    -1, clusterColors[0],
-    Math.floor(maxCount / 4), clusterColors[1],
-    Math.floor(maxCount / 2), clusterColors[2],
-    Math.floor(maxCount / 4 * 3), clusterColors[3],
-    maxCount, clusterColors[4]
-  ]
-}
-
-/*
-  Sets steps for the circle-radius paint property of the cluster
-  marker based on the maximum point_count of all clusters.
-  The scale starts at -1 since MapBox would throw an Error if
-  Math.floor(maxCount / 4) is equal to 0, which would result
-  in duplicate steps (2x "0") .
-*/
-const circleRadius = (maxCount) => {
-  return [
-    'interpolate',
-    ['exponential', 0.06],
-    ['get', 'point_count'],
-    -1, clusterSizes[0],
-    Math.floor(maxCount / 4), clusterSizes[1],
-    Math.floor(maxCount / 2), clusterSizes[2],
-    Math.floor(maxCount / 4 * 3), clusterSizes[3],
-    maxCount, clusterSizes[4]
-  ]
-}
-
-/*
-  Retrieves all currently rendered clusters (also out-of-viewport)
-  and calculates the maximum point_count of all clusters.
-
-  Eventually, sets the `circle-color` and `circle-radius` paint properties.
-
-  If no clusters are rendered yet (initial = True), it sets the paint properties with a default maxCount.
-*/
-const setPaintSteps = () => {
-  const clusters = map.queryRenderedFeatures({ layers: [clusterLayerId] })
-  const maxCount = clusters.map(c => c.properties.point_count).reduce((a, b) => Math.max(a, b), 8)
-
-  map.setPaintProperty(clusterLayerId, 'circle-color', circleColor(maxCount))
-  map.setPaintProperty(clusterLayerId, 'circle-radius', circleRadius(maxCount))
 }
