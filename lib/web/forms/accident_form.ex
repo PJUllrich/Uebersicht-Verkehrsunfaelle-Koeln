@@ -38,13 +38,16 @@ defmodule Web.AccidentForm do
 
   defp map_vbs(changeset, key) do
     vbs = get_field(changeset, key)
-    mapped_vbs = if 0 in vbs, do: 0, else: map(vbs)
+    mapped_vbs = map(vbs)
     put_change(changeset, key, mapped_vbs)
   end
 
   defp map(nil), do: nil
 
   defp map(vbs), do: for(vb <- vbs, do: map_vb(vb)) |> to_flat_list()
+
+  # Maps "Keiner/Alleinunfall" to placeholder for empty vb2 values, which is 0
+  defp map_vb(0), do: [0..0]
 
   # Maps "KFZ" to the numerical police categories for "Motorized Bike" (1 to 19), "Car" (20 to 29) and "Truck" (40 to 59)
   defp map_vb(1), do: [1..19, 20..29]
