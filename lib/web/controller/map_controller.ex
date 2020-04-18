@@ -11,11 +11,11 @@ defmodule Web.MapController do
         json(conn, accidents)
 
       {:error, _invalid_changeset} ->
-        json(conn, AccidentQuery.default())
+        json(conn, AccidentQuery.filter(AccidentForm.default()))
     end
   end
 
-  def data(conn, _params), do: json(conn, AccidentQuery.default())
+  def data(conn, _params), do: json(conn, AccidentQuery.filter(AccidentForm.default()))
 
   # Some Browser don't support intercepting a form submit
   # and will perform a POST to the /api/list endpoint.

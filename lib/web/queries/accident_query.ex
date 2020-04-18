@@ -2,20 +2,12 @@ defmodule Web.AccidentQuery do
   import Ecto.Query
   alias App.{Accident, Repo}
 
-  def default() do
-    %{
-      years: [2017],
-      vb1: nil,
-      vb2: nil
-    }
-    |> filter()
-  end
-
   def filter(filter) do
     from(a in Accident)
     |> with_filter(:years, filter.years)
     |> with_filter(:vb1, filter.vb1)
     |> with_filter(:vb2, filter.vb2)
+    |> with_filter(:categories, filter.categories)
     |> select([a], [a.longitude, a.latitude])
     |> Repo.all()
     |> to_geojson()
@@ -45,6 +37,15 @@ defmodule Web.AccidentQuery do
     from(
       a in query,
       where: a.vb2 in ^vb2
+    )
+  end
+
+  defp with_filter(query, :categories, nil), do: query
+
+  defp with_filter(query, :categories, categories) do
+    from(
+      a in query,
+      where: a.category in ^categories
     )
   end
 

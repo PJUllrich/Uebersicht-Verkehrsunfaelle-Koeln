@@ -13,12 +13,17 @@ button#toggleFilterBtn.button.is-light onclick="toggleFilter()" Filter
     .control.is-expanded
       label.label 1. Unfallbeteiligter
       .select.is-multiple.is-fullwidth
-        = multiple_select f, :vb1, ["KFZ": 1, "Rad": 2, "Fuß": 3, "Bus & Bahn": 4], size: 4, selected: @form.data.vb1, autocomplete: "off"
+        = multiple_select f, :vb1, ["KFZ": 1, "LKW": 2, "Rad": 3, "Fuß": 4, "Bus & Bahn": 5], size: 5, selected: @form.data.vb1, autocomplete: "off"
   .field
     .control.is-expanded
       label.label 2. Unfallbeteiligter
       .select.is-multiple.is-fullwidth
-        = multiple_select f, :vb2, ["KFZ": 1, "Rad": 2, "Fuß": 3, "Bus & Bahn": 4], size: 4, selected: @form.data.vb2, autocomplete: "off"
+        = multiple_select f, :vb2, ["KFZ": 1, "LKW": 2, "Rad": 3, "Fuß": 4, "Bus & Bahn": 5], size: 5, selected: @form.data.vb2, autocomplete: "off"
+  .field
+    .control.is-expanded
+      label.label Unfallschwere
+      .select.is-multiple.is-fullwidth
+        = multiple_select f, :categories, ["Tödlich": 1, "Schwerverletzt": 2, "Leichtverletzt": 3], size: 3, selected: @form.data.categories, autocomplete: "off"
   .field
     .control.is-expanded
       button#accidentFilterSubmitBtn.button.is-link Submit

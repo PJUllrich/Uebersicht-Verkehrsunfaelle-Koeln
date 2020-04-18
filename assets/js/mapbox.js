@@ -233,7 +233,7 @@ map.on('load', async () => {
   map.addSource(clusterDataSource, {
     type: 'geojson',
     cluster: true,
-    clusterMaxZoom: 18,
+    clusterMaxZoom: 15,
     clusterRadius: 20,
     data: data
   })

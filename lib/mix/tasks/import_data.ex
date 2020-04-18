@@ -8,28 +8,18 @@ defmodule Mix.Tasks.ImportData do
 
     App.Repo.delete_all(App.Accident)
 
-    File.stream!(path, [:trim_bom])
-    |> CSV.decode!(separator: ?;)
-    |> Enum.each(&create_accident/1)
+    opts = App.Repo.config()
+    {:ok, pid} = Postgrex.start_link(opts)
+
+    Postgrex.transaction(pid, fn conn ->
+      stream =
+        Postgrex.stream(
+          conn,
+          "COPY accidents(id,year,latitude,longitude,category,vb1,vb2) FROM STDIN CSV HEADER ",
+          []
+        )
+
+      Enum.into(File.stream!(path, [:trim_bom]), stream)
+    end)
   end
-
-  defp create_accident([year, latitude, longitude, vb1, vb2]) do
-    attrs = %{
-      year: year,
-      latitude: latitude |> String.replace(",", "."),
-      longitude: longitude |> String.replace(",", "."),
-      vb1: vb1,
-      vb2: vb2
-    }
-
-    %App.Accident{}
-    |> App.Accident.changeset(attrs)
-    |> insert_changeset()
-  end
-
-  defp insert_changeset(%Ecto.Changeset{valid?: true} = changeset),
-    do: App.Repo.insert!(changeset)
-
-  defp insert_changeset(%Ecto.Changeset{valid?: false} = changeset),
-    do: Logger.warn(changeset.errors)
 end
