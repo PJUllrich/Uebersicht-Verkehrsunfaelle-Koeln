@@ -33,6 +33,13 @@ defmodule Web.AccidentQuery do
 
   defp with_filter(query, :vb2, nil), do: query
 
+  defp with_filter(query, :vb2, 0) do
+    from(
+      a in query,
+      where: is_nil(a.vb2)
+    )
+  end
+
   defp with_filter(query, :vb2, vb2) do
     from(
       a in query,

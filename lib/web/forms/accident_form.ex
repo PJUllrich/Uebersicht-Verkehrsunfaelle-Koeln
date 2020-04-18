@@ -38,7 +38,7 @@ defmodule Web.AccidentForm do
 
   defp map_vbs(changeset, key) do
     vbs = get_field(changeset, key)
-    mapped_vbs = map(vbs)
+    mapped_vbs = if 0 in vbs, do: 0, else: map(vbs)
     put_change(changeset, key, mapped_vbs)
   end
 
