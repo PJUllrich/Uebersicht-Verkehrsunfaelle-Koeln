@@ -1,7 +1,7 @@
 defmodule Web.AccidentForm do
   use Web, :form_object
 
-  @default_values %{years: [2017], vb1: [1], vb2: [3], categories: [1, 2, 3]}
+  @default_values %{years: [2019], vb1: [1, 3], vb2: [1, 3], categories: [1, 2, 3]}
 
   @primary_key false
   embedded_schema do

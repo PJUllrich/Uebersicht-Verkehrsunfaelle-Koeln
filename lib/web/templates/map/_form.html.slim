@@ -8,7 +8,7 @@ button#toggleFilterBtn.button.is-light onclick="toggleFilter()" Filter
     .control.is-expanded
       label.label Jahr des Unfalls
       .select.is-multiple.is-fullwidth
-        = multiple_select f, :years, ["2017": 2017, "2016": 2016, "2015": 2015, "2014": 2014, "2013": 2013], size: 5, selected: @form.data.years
+        = multiple_select f, :years, ["2020": 2020, "2019": 2019, "2018": 2018, "2017": 2017, "2016": 2016, "2015": 2015, "2014": 2014, "2013": 2013], size: 4, selected: @form.data.years
   .field
     .control.is-expanded
       label.label 1. Unfallbeteiligter
