@@ -76,8 +76,8 @@ const circleColor = (maxCount) => {
     ['exponential', 0.06],
     ['get', 'point_count'],
     -1, clusterColors[0],
-    Math.floor(maxCount / 4), clusterColors[1],
-    Math.floor(maxCount / 2), clusterColors[2],
+    Math.floor(maxCount / 5), clusterColors[1],
+    Math.floor(maxCount / 3), clusterColors[2],
     Math.floor(maxCount / 4 * 3), clusterColors[3],
     maxCount, clusterColors[4]
   ]
@@ -233,7 +233,7 @@ map.on('load', async () => {
   map.addSource(clusterDataSource, {
     type: 'geojson',
     cluster: true,
-    clusterMaxZoom: 15,
+    clusterMaxZoom: 22,
     clusterRadius: 20,
     data: data
   })

@@ -1,11 +1,13 @@
 @import "bulma"
 
-.hero-head
-  .navbar
-    padding-left: 0.3rem
+.navbar
+  padding-left: 0.3rem
 
-    .logo
-      padding-top: 1rem
+  .logo
+    padding-top: 1rem
+
+  &-title
+    font-size: 1.5rem
 
 .hero-body
   padding: 0
@@ -47,6 +49,13 @@
   display: none
 
 @media (max-width: $tablet)
+  .navbar
+    &-item
+      padding-right: 0
+
+    &-title
+      font-size: 1rem
+
   .hero-body .content
     flex-direction: column
 
