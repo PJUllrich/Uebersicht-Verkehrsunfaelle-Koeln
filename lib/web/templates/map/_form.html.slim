@@ -8,22 +8,38 @@ button#toggleFilterBtn.button.is-light onclick="toggleFilter()" Filter
     .control.is-expanded
       label.label Jahr des Unfalls
       .select.is-multiple.is-fullwidth
-        = multiple_select f, :years, ["2020 Q1": 2020, "2019": 2019, "2018": 2018, "2017": 2017, "2016": 2016, "2015": 2015, "2014": 2014, "2013": 2013], size: 4, selected: @form.data.years
+        = for year <- years() do
+          label
+            - checked = year.value in @form.changes.years
+            input.checkbox name="q[years][]" type="checkbox" value="#{year.value}" checked=checked
+            = year.text
   .field
     .control.is-expanded
       label.label 1. Unfallbeteiligter
       .select.is-multiple.is-fullwidth
-        = multiple_select f, :vb1, ["PKW/Krad": 1, "LKW": 2, "Rad": 3, "Fuß": 4, "Bus & Bahn": 5], size: 5, selected: @form.data.vb1, autocomplete: "off"
+        = for vb <- vb1() do
+          label
+            - checked = vb.value in @form.changes.vb1
+            input.checkbox name="q[vb1][]" type="checkbox" value="#{vb.value}" checked=checked
+            = vb.text
   .field
     .control.is-expanded
       label.label 2. Unfallbeteiligter
       .select.is-multiple.is-fullwidth
-        = multiple_select f, :vb2, ["PKW/Krad": 1, "LKW": 2, "Rad": 3, "Fuß": 4, "Bus & Bahn": 5, "Keiner/Alleinunfall": 0], size: 6, selected: @form.data.vb2, autocomplete: "off"
+        = for vb <- vb2() do
+          label
+            - checked = vb.value in @form.changes.vb2
+            input.checkbox name="q[vb2][]" type="checkbox" value="#{vb.value}" checked=checked
+            = vb.text
   .field
     .control.is-expanded
       label.label Unfallschwere
       .select.is-multiple.is-fullwidth
-        = multiple_select f, :categories, ["Tödlich": 1, "Schwerverletzt": 2, "Leichtverletzt": 3], size: 3, selected: @form.data.categories, autocomplete: "off"
+        = for category <- categories() do
+          label
+            - checked = category.value in @form.changes.categories
+            input.checkbox name="q[categories][]" type="checkbox" value="#{category.value}" checked=checked
+            = category.text
   .field
     .control.is-expanded
-      button#accidentFilterSubmitBtn.button.is-link Submit
+      button#accidentFilterSubmitBtn.button.is-link Anzeigen

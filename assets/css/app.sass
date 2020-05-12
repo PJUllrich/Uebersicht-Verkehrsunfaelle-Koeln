@@ -1,6 +1,7 @@
 @import "bulma"
 
 .navbar
+  overflow: auto
   padding-left: 0.3rem
 
   .logo
@@ -22,6 +23,13 @@
 
       form
         padding-top: 1rem
+
+        .select
+          display: flex
+          flex-direction: column
+
+          input
+            margin: 0 0.5rem 0 0.3rem
 
         .checkbox label
           padding-left: 0.4rem
@@ -50,6 +58,8 @@
 
 @media (max-width: $tablet)
   .navbar
+    padding: 0
+
     &-item
       padding-right: 0
 

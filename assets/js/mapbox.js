@@ -303,6 +303,7 @@ window.fetchData = (e) => {
   map.getSource(heatmapDataSource).setData(reqUrl)
 
   setButtonIsLoading(false)
+  window.toggleFilter()
 
   return false
 }
