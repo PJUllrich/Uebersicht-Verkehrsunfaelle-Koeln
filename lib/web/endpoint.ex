@@ -25,7 +25,7 @@ defmodule Web.Endpoint do
   plug(Plug.Static,
     at: "/",
     from: :app,
-    gzip: false,
+    gzip: true,
     only: ~w(css fonts images js favicon.ico robots.txt)
   )
 

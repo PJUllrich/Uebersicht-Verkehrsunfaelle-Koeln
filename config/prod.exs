@@ -10,7 +10,7 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :app, Web.Endpoint,
-  http: [port: {:system, "PORT"}],
+  http: [port: {:system, "PORT"}, compress: true],
   url: [scheme: "https", host: {:system, "HOSTNAME"}, port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json"
