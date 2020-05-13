@@ -22,7 +22,7 @@ defmodule Web.AccidentForm do
   end
 
   def validate(params \\ %{}) do
-    new()
+    new(%{})
     |> do_cast(params)
     |> map_vbs()
     |> apply_action(:insert)
