@@ -1,13 +1,5 @@
 button#toggleFilterBtn.button.is-light onclick="toggleFilter()" Filter 
 
-.dropdown.is-active
-  .dropdown-trigger
-    button.button
-      span Statistik
-      span.icon.is-small
-        i.fas.fa-angle-down aria-hidden="true"
-  .dropdown-menu#statistik-dropdown
-
 = form_for @form, Routes.map_url(@conn, :data), [id: "accidentFilter", as: "q", onsubmit: "return fetchData(event)"], fn _f ->
   .field.checkbox
     input#toggleHeatmapInput type="checkbox" onclick="toggleHeatmap()"
