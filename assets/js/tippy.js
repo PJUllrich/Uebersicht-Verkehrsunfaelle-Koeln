@@ -5,5 +5,5 @@ tippy('#info-vb-1', {
 })
 
 tippy('#info-vb-2', {
-  content: 'Der zweite Unfallbeteiligte ist nach Ersteinschätzung der Polizei vor Ort das Unfallopfer.'
+  content: 'Der zweite Unfallbeteiligte ist nach Ersteinschätzung der Polizei vor Ort nicht der Hauptverursacher.'
 })

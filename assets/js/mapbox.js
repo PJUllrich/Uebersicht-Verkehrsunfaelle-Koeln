@@ -73,9 +73,9 @@ const createSummaryTable = (accidents) => {
 
   return `
   <table>
-    <tr><th></th><th></th><th colspan="6">2. Unfallbeteiligter</th></tr>
+    <tr><th></th><th></th><th colspan="6" class="horizontal-header">2. Unfallbeteiligter</th></tr>
     <tr><th></th><th></th><th>PKW</th><th>LKW</th><th>Rad</th><th>Fuß</th><th>B&B</th><th>Allein</th></tr>
-    <tr><th rowspan="5" class="vertical-row-header">1. Unfallbeteiligter</th><th>PKW</th><td>${r[0][0]}</td><td>${r[0][1]}</td><td>${r[0][2]}</td><td>${r[0][3]}</td><td>${r[0][4]}</td><td>${r[0][5]}</td></tr>
+    <tr><th rowspan="5" class="vertical-header"><p class="vertical-header-content">1. Unfallbeteiligter</p></th><th>PKW</th><td>${r[0][0]}</td><td>${r[0][1]}</td><td>${r[0][2]}</td><td>${r[0][3]}</td><td>${r[0][4]}</td><td>${r[0][5]}</td></tr>
     <tr><th>LKW</th><td>${r[1][0]}</td><td>${r[1][1]}</td><td>${r[1][2]}</td><td>${r[1][3]}</td><td>${r[1][4]}</td><td>${r[1][5]}</td.</tr>
     <tr><th>Rad</th><td>${r[2][0]}</td><td>${r[2][1]}</td><td>${r[2][2]}</td><td>${r[2][3]}</td><td>${r[2][4]}</td><td>${r[2][5]}</td.</tr>
     <tr><th>Fuß</th><td>${r[3][0]}</td><td>${r[3][1]}</td><td>${r[3][2]}</td><td>${r[3][3]}</td><td>${r[3][4]}</td><td>${r[3][5]}</td.</tr>
