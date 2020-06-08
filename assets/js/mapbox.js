@@ -10,7 +10,7 @@ const accidentFilterId = 'accidentFilter'
 const accidentFilterSubmitBtnId = 'accidentFilterSubmitBtn'
 
 // The cluster-color values from small to large clusters
-const clusterColors = ['#655fb6', '#cdcce1', '#5ea9f7', '#ef8633', '#e93223']
+const clusterColors = ['#655fb6', '#bcbadb', '#5ea9f7', '#ef8633', '#e93223']
 
 // The cluster-size values from small to large clusters (unit is px)
 const clusterSizes = [6, 8, 10, 11, 15]
