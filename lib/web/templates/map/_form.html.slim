@@ -1,5 +1,7 @@
 button#toggleFilterBtn.button.is-light onclick="toggleFilter()" Filter 
 
+= render "_summary.html", assigns
+
 = form_for @form, Routes.map_url(@conn, :data), [id: "accidentFilter", as: "q", onsubmit: "return fetchData(event)"], fn _f ->
   .field.checkbox
     input#toggleHeatmapInput type="checkbox" onclick="toggleHeatmap()"

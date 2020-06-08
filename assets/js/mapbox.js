@@ -1,5 +1,6 @@
 import 'regenerator-runtime'
 import mapboxgl from 'mapbox-gl'
+import tippy from 'tippy.js'
 
 // Receive config parameter from the app.html layout template
 const accidentsEndpoint = document.currentScript.getAttribute('endpoint')
@@ -72,7 +73,7 @@ const createSummaryTable = (accidents) => {
   }, baseMatrix)
 
   return `
-  <table>
+  <table class="summary-table">
     <tr><th></th><th></th><th colspan="6" class="horizontal-header">2. Unfallbeteiligter</th></tr>
     <tr><th></th><th></th><th>PKW</th><th>LKW</th><th>Rad</th><th>Fuß</th><th>B&B</th><th>Allein</th></tr>
     <tr><th rowspan="5" class="vertical-header"><p class="vertical-header-content">1. Unfallbeteiligter</p></th><th>PKW</th><td>${r[0][0]}</td><td>${r[0][1]}</td><td>${r[0][2]}</td><td>${r[0][3]}</td><td>${r[0][4]}</td><td>${r[0][5]}</td></tr>
@@ -82,6 +83,10 @@ const createSummaryTable = (accidents) => {
     <tr><th>B&B</th><td>${r[4][0]}</td><td>${r[4][1]}</td><td>${r[4][2]}</td><td>${r[4][3]}</td><td>${r[4][4]}</td><td>${r[4][5]}</td.</tr>
   </table>
   `
+}
+
+const setSummaryTable = (accidents) => {
+  document.getElementById('statistic-content').innerHTML = createSummaryTable(accidents)
 }
 
 const createPointInfo = (properties) => {
@@ -354,6 +359,8 @@ map.on('load', async () => {
     addPopoverToCluster()
     addPopoverToPoints()
   }
+
+  setSummaryTable(data.features)
 })
 
 /*
