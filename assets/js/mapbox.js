@@ -38,6 +38,67 @@ let showHeatmap = false
 
 const isAccidentFilterVisible = window.getComputedStyle(document.getElementById(accidentFilterId)).display !== 'none'
 
+const vbMapping = {
+  0: 'Alleinunfall',
+  1: 'PKW/Krad',
+  2: 'LKW',
+  3: 'Rad',
+  4: 'Fuß',
+  5: 'Bus & Bahn'
+}
+
+const catMapping = {
+  1: 'Tödlich',
+  2: 'Schwerverletzt',
+  3: 'Leichtverletzt'
+}
+
+const createSummaryTable = (accidents) => {
+  const baseMatrix = [
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0]
+  ]
+
+  const r = accidents.reduce((acc, accident) => {
+    const vb1 = accident.properties.vb1 - 1
+    let vb2 = accident.properties.vb2 - 1
+    vb2 = vb2 < 0 ? 5 : vb2
+
+    acc[vb1][vb2] = acc[vb1][vb2] + 1
+    return acc
+  }, baseMatrix)
+
+  return `
+  <table>
+    <tr><th></th><th></th><th colspan="6">2. Unfallbeteiligter</th></tr>
+    <tr><th></th><th></th><th>PKW</th><th>LKW</th><th>Rad</th><th>Fuß</th><th>B&B</th><th>Allein</th></tr>
+    <tr><th rowspan="5" class="vertical-row-header">1. Unfallbeteiligter</th><th>PKW</th><td>${r[0][0]}</td><td>${r[0][1]}</td><td>${r[0][2]}</td><td>${r[0][3]}</td><td>${r[0][4]}</td><td>${r[0][5]}</td></tr>
+    <tr><th>LKW</th><td>${r[1][0]}</td><td>${r[1][1]}</td><td>${r[1][2]}</td><td>${r[1][3]}</td><td>${r[1][4]}</td><td>${r[1][5]}</td.</tr>
+    <tr><th>Rad</th><td>${r[2][0]}</td><td>${r[2][1]}</td><td>${r[2][2]}</td><td>${r[2][3]}</td><td>${r[2][4]}</td><td>${r[2][5]}</td.</tr>
+    <tr><th>Fuß</th><td>${r[3][0]}</td><td>${r[3][1]}</td><td>${r[3][2]}</td><td>${r[3][3]}</td><td>${r[3][4]}</td><td>${r[3][5]}</td.</tr>
+    <tr><th>B&B</th><td>${r[4][0]}</td><td>${r[4][1]}</td><td>${r[4][2]}</td><td>${r[4][3]}</td><td>${r[4][4]}</td><td>${r[4][5]}</td.</tr>
+  </table>
+  `
+}
+
+const createPointInfo = (properties) => {
+  const vb1 = vbMapping[properties.vb1]
+  const vb2 = vbMapping[properties.vb2]
+  const category = catMapping[properties.category]
+
+  return `
+    <table>
+    <tr><th>1. Unfallbeteiligter</th><td>${vb1}</td></tr>
+    <tr><th>2. Unfallbeteiligter</th><td>${vb2}</td></tr>
+    <tr><th>Unfallschwere</th><td>${category}</td></tr>
+    <tr></tr>
+    </table>
+  `
+}
+
 // Shows or hides a Spinner in the "Submit"-Button
 const setButtonIsLoading = (isLoading) => {
   const button = document.getElementById(accidentFilterSubmitBtnId)
@@ -194,6 +255,44 @@ const addHeatmapLayers = () => {
   })
 }
 
+const addPopoverToCluster = () => {
+  map.on('click', clusterLayerId, (e) => {
+    var features = map.queryRenderedFeatures(e.point, { layers: [clusterLayerId] })
+    var clusterId = features[0].properties.cluster_id
+    var pointCount = features[0].properties.point_count
+    var clusterSource = map.getSource(clusterDataSource)
+    var coordinates = e.features[0].geometry.coordinates.slice()
+
+    // Get all points under a cluster
+    clusterSource.getClusterLeaves(clusterId, pointCount, 0, (error, features) => {
+      if (error) return
+
+      new mapboxgl.Popup()
+        .setLngLat(coordinates)
+        .setHTML(createSummaryTable(features))
+        .addTo(map)
+    })
+  })
+
+  map.on('mouseenter', clusterLayerId, function () {
+    map.getCanvas().style.cursor = 'pointer'
+  })
+  map.on('mouseleave', clusterLayerId, function () {
+    map.getCanvas().style.cursor = ''
+  })
+}
+
+const addPopoverToPoints = () => {
+  map.on('click', clusterLayerUnclusteredPoints, (e) => {
+    console.log(e)
+    var coordinates = e.features[0].geometry.coordinates.slice()
+    new mapboxgl.Popup()
+      .setLngLat(coordinates)
+      .setHTML(createPointInfo(e.features[0].properties))
+      .addTo(map)
+  })
+}
+
 const removeClusterLayers = () => {
   map.removeLayer(clusterLayerId)
   map.removeLayer(clusterLayerCounts)
@@ -252,6 +351,8 @@ map.on('load', async () => {
     addHeatmapLayers()
   } else {
     addClusterLayers()
+    addPopoverToCluster()
+    addPopoverToPoints()
   }
 })
 

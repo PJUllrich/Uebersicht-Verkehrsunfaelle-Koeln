@@ -1,6 +1,6 @@
 button#toggleFilterBtn.button.is-light onclick="toggleFilter()" Filter 
 
-= form_for @form, Routes.map_url(@conn, :data), [id: "accidentFilter", as: "q", onsubmit: "return fetchData(event)"], fn f ->
+= form_for @form, Routes.map_url(@conn, :data), [id: "accidentFilter", as: "q", onsubmit: "return fetchData(event)"], fn _f ->
   .field.checkbox
     input#toggleHeatmapInput type="checkbox" onclick="toggleHeatmap()"
     label for="toggleHeatmapInput" Heatmap
@@ -15,7 +15,9 @@ button#toggleFilterBtn.button.is-light onclick="toggleFilter()" Filter
             = year.text
   .field
     .control.is-expanded
-      label.label 1. Unfallbeteiligter
+      label.label 
+        span 1. Unfallbeteiligter
+        img#info-vb-1.sprite-info src=Routes.static_path(@conn, "/images/info.svg")
       .select.is-multiple.is-fullwidth
         = for vb <- vb1() do
           label
@@ -24,7 +26,9 @@ button#toggleFilterBtn.button.is-light onclick="toggleFilter()" Filter
             = vb.text
   .field
     .control.is-expanded
-      label.label 2. Unfallbeteiligter
+      label.label 
+        span 2. Unfallbeteiligter
+        img#info-vb-2.sprite-info src=Routes.static_path(@conn, "/images/info.svg")
       .select.is-multiple.is-fullwidth
         = for vb <- vb2() do
           label

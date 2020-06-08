@@ -11,7 +11,8 @@ import css from '../css/app.sass'
 //
 import 'phoenix_html'
 
-import './mapbox'
+import mapbox from './mapbox'
+import tippy from './tippy'
 
 // Import local files
 //

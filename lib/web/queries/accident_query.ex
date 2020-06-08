@@ -2,13 +2,14 @@ defmodule Web.AccidentQuery do
   import Ecto.Query
   alias App.{Accident, Repo}
 
+  import App.Accident, only: [map_to_cat: 1]
+
   def filter(filter) do
     from(a in Accident)
     |> with_filter(:years, filter.years)
     |> with_filter(:vb1, filter.vb1)
     |> with_filter(:vb2, filter.vb2)
     |> with_filter(:categories, filter.categories)
-    |> select([a], [a.longitude, a.latitude])
     |> Repo.all()
     |> to_geojson()
   end
@@ -51,8 +52,16 @@ defmodule Web.AccidentQuery do
 
   defp to_geojson(accidents) do
     features =
-      for [long, lat] <- accidents,
-          do: %{type: "Feature", geometry: %{type: "Point", coordinates: [long, lat]}}
+      for acc <- accidents,
+          do: %{
+            type: "Feature",
+            geometry: %{type: "Point", coordinates: [acc.longitude, acc.latitude]},
+            properties: %{
+              vb1: map_to_cat(acc.vb1),
+              vb2: map_to_cat(acc.vb2),
+              category: acc.category
+            }
+          }
 
     %{type: "FeatureCollection", features: features}
   end
