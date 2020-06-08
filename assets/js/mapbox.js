@@ -223,21 +223,6 @@ const addClusterLayers = () => {
 
 const addHeatmapLayers = () => {
   map.addLayer({
-    id: heatmapLayerStreets,
-    type: 'line',
-    source: 'mapbox-streets',
-    'source-layer': 'road',
-    layout: {
-      'line-join': 'round',
-      'line-cap': 'round'
-    },
-    paint: {
-      'line-color': '#C6D2F6',
-      'line-width': 1
-    }
-  })
-
-  map.addLayer({
     id: heatmapLayerId,
     type: 'heatmap',
     source: heatmapDataSource,
@@ -345,6 +330,21 @@ map.on('load', async () => {
   map.addSource('mapbox-streets', {
     type: 'vector',
     url: 'mapbox://mapbox.mapbox-streets-v8'
+  })
+
+  map.addLayer({
+    id: heatmapLayerStreets,
+    type: 'line',
+    source: 'mapbox-streets',
+    'source-layer': 'road',
+    layout: {
+      'line-join': 'round',
+      'line-cap': 'round'
+    },
+    paint: {
+      'line-color': '#C6D2F6',
+      'line-width': 1
+    }
   })
 
   if (showHeatmap) {

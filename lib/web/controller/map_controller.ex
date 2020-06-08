@@ -5,8 +5,6 @@ defmodule Web.MapController do
   alias Web.AccidentForm
 
   def data(conn, %{"q" => query}) do
-    IO.inspect(query)
-
     case AccidentForm.validate(query) do
       {:ok, filter} ->
         accidents = AccidentQuery.filter(filter)
