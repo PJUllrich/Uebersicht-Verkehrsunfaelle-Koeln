@@ -17,7 +17,8 @@ button#toggleFilterBtn.button.is-light onclick="toggleFilter()" Filter
     .control.is-expanded
       label.label 
         span 1. Unfallbeteiligter
-        img#info-vb-1.sprite-info src=Routes.static_path(@conn, "/images/info.svg")
+        span#info-vb-1.icon.is-small.sprite-info
+          i.far.fa-question-circle
       .select.is-multiple.is-fullwidth
         = for vb <- vb1() do
           label
@@ -28,7 +29,8 @@ button#toggleFilterBtn.button.is-light onclick="toggleFilter()" Filter
     .control.is-expanded
       label.label 
         span 2. Unfallbeteiligter
-        img#info-vb-2.sprite-info src=Routes.static_path(@conn, "/images/info.svg")
+        span#info-vb-2.icon.is-small.sprite-info
+          i.far.fa-question-circle
       .select.is-multiple.is-fullwidth
         = for vb <- vb2() do
           label

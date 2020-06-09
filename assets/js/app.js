@@ -13,6 +13,7 @@ import 'phoenix_html'
 
 import mapbox from './mapbox'
 import tippy from './tippy'
+import bulma from './bulma'
 
 // Import local files
 //

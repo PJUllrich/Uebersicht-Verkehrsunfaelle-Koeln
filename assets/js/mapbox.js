@@ -27,6 +27,8 @@ const clusterLayerUnclusteredCount = 'unclustered-counts'
 const heatmapLayerId = 'heatmap'
 const heatmapLayerStreets = 'heatmap-streets'
 
+const summaryTableContainerId = 'statistic-content'
+
 // Since MapBox GL JS doesn't have a proper "Everything is loaded and rendered"-Event
 // this is a workaround to track whether the map has reached the 'idle' state
 // in which the map is fully loaded and the clusters can be resized and colored based on their
@@ -72,7 +74,7 @@ const createSummaryTable = (accidents) => {
   }, baseMatrix)
 
   return `
-  <table>
+  <table class="summary-table">
     <tr><th></th><th></th><th colspan="6" class="horizontal-header">2. Unfallbeteiligter</th></tr>
     <tr><th></th><th></th><th>PKW</th><th>LKW</th><th>Rad</th><th>Fuß</th><th>B&B</th><th>Allein</th></tr>
     <tr><th rowspan="5" class="vertical-header"><p class="vertical-header-content">1. Unfallbeteiligter</p></th><th>PKW</th><td>${r[0][0]}</td><td>${r[0][1]}</td><td>${r[0][2]}</td><td>${r[0][3]}</td><td>${r[0][4]}</td><td>${r[0][5]}</td></tr>
@@ -82,6 +84,10 @@ const createSummaryTable = (accidents) => {
     <tr><th>B&B</th><td>${r[4][0]}</td><td>${r[4][1]}</td><td>${r[4][2]}</td><td>${r[4][3]}</td><td>${r[4][4]}</td><td>${r[4][5]}</td.</tr>
   </table>
   `
+}
+
+const setSummaryTable = (accidents) => {
+  document.getElementById(summaryTableContainerId).innerHTML = createSummaryTable(accidents)
 }
 
 const createPointInfo = (properties) => {
@@ -313,6 +319,8 @@ map.on('idle', () => {
 map.on('load', async () => {
   const res = await fetch(accidentsEndpoint)
   const data = await res.json()
+
+  setSummaryTable(data.features)
 
   map.addSource(clusterDataSource, {
     type: 'geojson',
