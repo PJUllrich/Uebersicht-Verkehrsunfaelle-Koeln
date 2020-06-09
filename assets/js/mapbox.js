@@ -293,7 +293,6 @@ const removeClusterLayers = () => {
 
 const removeHeatmapLayers = () => {
   map.removeLayer(heatmapLayerId)
-  map.removeLayer(heatmapLayerStreets)
 }
 
 // Sets up a new MapBox GL JS map centered on Cologne, Germany
@@ -315,12 +314,19 @@ map.on('idle', () => {
   isFullyRendered = true
 })
 
-// Setup the data-source and layers of the map
-map.on('load', async () => {
-  const res = await fetch(accidentsEndpoint)
+const setMapData = async (url) => {
+  const res = await fetch(url)
   const data = await res.json()
 
-  setSummaryTable(data.features)
+  if (map.getSource(clusterDataSource)) {
+    if (!showHeatmap) removeClusterLayers()
+    map.removeSource(clusterDataSource)
+  }
+
+  if (map.getSource(heatmapDataSource)) {
+    if (showHeatmap) removeHeatmapLayers()
+    map.removeSource(heatmapDataSource)
+  }
 
   map.addSource(clusterDataSource, {
     type: 'geojson',
@@ -334,6 +340,20 @@ map.on('load', async () => {
     type: 'geojson',
     data: data
   })
+
+  if (showHeatmap) {
+    addHeatmapLayers()
+  } else {
+    addClusterLayers()
+    addPopoverToCluster()
+    addPopoverToPoints()
+  }
+  setSummaryTable(data.features)
+}
+
+// Setup the data-source and layers of the map
+map.on('load', async () => {
+  setMapData(accidentsEndpoint)
 
   map.addSource('mapbox-streets', {
     type: 'vector',
@@ -354,14 +374,6 @@ map.on('load', async () => {
       'line-width': 1
     }
   })
-
-  if (showHeatmap) {
-    addHeatmapLayers()
-  } else {
-    addClusterLayers()
-    addPopoverToCluster()
-    addPopoverToPoints()
-  }
 })
 
 /*
@@ -406,12 +418,7 @@ window.fetchData = (e) => {
     e => e.map(encodeURIComponent).join('=')
   ).join('&')
 
-  setButtonIsLoading(true)
-
-  map.getSource(clusterDataSource).setData(reqUrl)
-  map.getSource(heatmapDataSource).setData(reqUrl)
-
-  setButtonIsLoading(false)
+  setMapData(reqUrl)
   window.toggleFilter()
 
   return false
