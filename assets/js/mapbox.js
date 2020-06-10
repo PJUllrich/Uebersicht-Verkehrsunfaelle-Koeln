@@ -83,6 +83,7 @@ const createSummaryTable = (accidents) => {
     <tr><th>Fuß</th><td>${r[3][0]}</td><td>${r[3][1]}</td><td>${r[3][2]}</td><td>${r[3][3]}</td><td>${r[3][4]}</td><td>${r[3][5]}</td.</tr>
     <tr><th>B&B</th><td>${r[4][0]}</td><td>${r[4][1]}</td><td>${r[4][2]}</td><td>${r[4][3]}</td><td>${r[4][4]}</td><td>${r[4][5]}</td.</tr>
   </table>
+  <div><span>Total: ${accidents.length}</span></div>
   `
 }
 

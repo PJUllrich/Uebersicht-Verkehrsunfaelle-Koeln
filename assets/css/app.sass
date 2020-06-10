@@ -72,11 +72,22 @@
 
 .vertical-header
   vertical-align: middle !important
+  text-align: center !important
 
   &-content
     writing-mode: tb-rl
     border: none !important
     white-space: nowrap
+
+.summary-table
+  table-layout: fixed
+  margin-bottom: 0.1rem !important
+
+  th
+    width: 2rem
+
+  th+th, td
+    width: auto
 
 tr:last-child td, .content table tbody tr:last-child th
   border: 1px solid #dbdbdb !important
@@ -87,8 +98,15 @@ tr:last-child td, .content table tbody tr:last-child th
   width: 23rem
 
 @media (max-width: $tablet)
-  .summary-table td, .summary-table th
-    padding: 0.1em 0 !important
+  .mapboxgl-popup-content
+    width: 21rem !important
+
+  .summary-table
+    width: 20rem !important
+
+  .summary-table
+    td, th
+      padding: 0.1em 0 !important
 
   .navbar
     padding: 0
