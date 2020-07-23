@@ -4,6 +4,13 @@ defmodule Mix.Tasks.GeocodeData do
   require Logger
 
   @azure_search_endpoint "https://atlas.microsoft.com/search/address/json"
+  @ignore_before ~D[2020-04-01]
+  @col %{
+    stadtteil: 15,
+    strasse_1: 16,
+    strasse_2: 17,
+    haus_nr: 18
+  }
 
   def run([path]) do
     HTTPoison.start()
@@ -46,7 +53,7 @@ defmodule Mix.Tasks.GeocodeData do
   defp filter([_jahr, datum | _] = row) do
     date = Timex.parse!(datum, "{D}.{0M}.{YY}")
 
-    if Timex.compare(date, ~D[2020-04-01]) == -1 do
+    if Timex.compare(date, @ignore_before) != -1 do
       {:ok, row}
     else
       {:error, row}
@@ -54,10 +61,10 @@ defmodule Mix.Tasks.GeocodeData do
   end
 
   defp erstelle_adresse(row) do
-    strasse_1 = Enum.at(row, 16)
-    strasse_2 = Enum.at(row, 17)
-    haus_nr = Enum.at(row, 18)
-    stadtteil = Enum.at(row, 15)
+    strasse_1 = Enum.at(row, @col.strasse_1)
+    strasse_2 = Enum.at(row, @col.strasse_2)
+    haus_nr = Enum.at(row, @col.haus_nr)
+    stadtteil = Enum.at(row, @col.stadtteil)
     strasse = if haus_nr, do: "#{strasse_1} #{haus_nr}", else: "#{strasse_1} & #{strasse_2}"
 
     {:ok, "#{strasse}, #{stadtteil}, Köln"}
