@@ -47,6 +47,8 @@ defmodule App.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:csv, "~> 2.3"},
+      {:httpoison, "~> 1.6"},
+      {:timex, "~> 3.5"},
       {:floki, ">= 0.0.0", only: :test}
     ]
   end
