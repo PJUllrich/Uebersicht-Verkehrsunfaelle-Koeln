@@ -34,10 +34,10 @@ defmodule App.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.4.9"},
+      {:phoenix, "~> 1.5.2"},
       {:phoenix_html, "~> 2.14.2"},
       {:phoenix_slime, "~> 0.13.1"},
-      {:phoenix_pubsub, "~> 1.1"},
+      {:phoenix_pubsub, "~> 2.0"},
       # {:phoenix_live_dashboard, "~> 0.2.7", override: true},
       {:phoenix_ecto, "~> 4.0"},
       {:phoenix_live_view, "~> 0.14.0"},
