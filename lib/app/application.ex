@@ -11,6 +11,7 @@ defmodule App.Application do
       # Start the Ecto repository
       App.Repo,
       Web.Telemetry,
+      {Phoenix.PubSub, [name: App.PubSub, adapter: Phoenix.PubSub.PG2]},
       # Start the endpoint when the application starts
       Web.Endpoint
       # Starts a worker by calling: App.Worker.start_link(arg)
