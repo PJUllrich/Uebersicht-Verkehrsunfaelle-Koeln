@@ -53,7 +53,7 @@ defmodule App.MixProject do
       {:telemetry_poller, "~> 0.4"},
       {:telemetry_metrics, "~> 0.4"},
       {:live_dashboard_history, "~> 0.1.0"},
-      {:analytics_ex, ">= 0.0.0", path: "../../analytics_ex"},
+      {:analytics_ex, "~> 0.1.0"},
       {:floki, ">= 0.0.0", only: :test}
     ]
   end

@@ -9,7 +9,7 @@ defmodule Web.Router do
     plug(:fetch_flash)
     plug(:protect_from_forgery)
     plug(:put_secure_browser_headers)
-    plug(AnalyticsExWeb.Plugs.BumpMetric)
+    plug(AnalyticsEx.Plugs.CountRequestsPerPath)
   end
 
   pipeline :api do
