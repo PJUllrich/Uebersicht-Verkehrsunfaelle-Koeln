@@ -32,6 +32,16 @@ config :phoenix, :template_engines,
   slime: PhoenixSlime.Engine,
   slimleex: PhoenixSlime.LiveViewEngine
 
+config :analytics_ex, repo: App.Repo
+
+config :live_dashboard_history, LiveDashboardHistory,
+  router: Web.Router,
+  metrics: Web.Telemetry
+
+config :app, :basic_auth,
+  username: "admin",
+  password: "admin"
+
 # Configures phoenix_slime to generate .slim files instead of .slime
 config :phoenix_slime, :use_slim_extension, true
 

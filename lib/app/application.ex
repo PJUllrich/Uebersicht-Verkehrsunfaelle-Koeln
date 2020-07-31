@@ -10,6 +10,7 @@ defmodule App.Application do
     children = [
       # Start the Ecto repository
       App.Repo,
+      Web.Telemetry,
       # Start the endpoint when the application starts
       Web.Endpoint
       # Starts a worker by calling: App.Worker.start_link(arg)
