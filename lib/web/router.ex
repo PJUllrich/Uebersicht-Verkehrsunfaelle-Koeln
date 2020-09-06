@@ -34,6 +34,7 @@ defmodule Web.Router do
     pipe_through(:api)
 
     get("/list", MapController, :data)
+    get("/ping", PingController, :ping)
   end
 
   scope "/" do
