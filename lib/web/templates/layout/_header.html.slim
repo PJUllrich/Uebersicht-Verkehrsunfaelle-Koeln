@@ -1,0 +1,31 @@
+.navbar
+  .navbar-brand
+    a.navbar-item.logo href="http://adfc.koeln"
+      img src=Routes.static_path(@conn, "/images/logo.png") alt="Logo des ADFC Köln"
+    
+    .navbar-item
+      h1.navbar-title Verkehrsunfälle in Köln
+
+    a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu"
+      span aria-hidden="true"
+      span aria-hidden="true"
+      span aria-hidden="true"
+
+  .navbar-end
+    .navbar-item
+      = if @conn.request_path == Routes.live_path(@conn, Web.AnalyseLive) do
+        a href=Routes.map_path(@conn, :index)
+          button.button.is-dark Karte
+      - else
+        a href=Routes.live_path(@conn, Web.AnalyseLive)
+          button.button.is-dark Analyse
+
+  .dropdown#navMenu
+    .navbar-item
+      = if @conn.request_path == Routes.live_path(@conn, Web.AnalyseLive) do
+        a href=Routes.map_path(@conn, :index)
+          button.button.is-dark Karte
+      - else
+        a href=Routes.live_path(@conn, Web.AnalyseLive)
+          button.button.is-dark Analyse
+    
