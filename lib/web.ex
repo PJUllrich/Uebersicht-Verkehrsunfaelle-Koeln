@@ -63,14 +63,22 @@ defmodule Web do
 
       import Web.ErrorHelpers
       import Web.Gettext
+      import Web.SharedView
       alias Web.Router.Helpers, as: Routes
     end
   end
 
   def live_view do
     quote do
-      use Phoenix.LiveView
+      use Phoenix.LiveView, layout: {Web.LayoutView, "live.html"}
       alias Web.Router.Helpers, as: Routes
+    end
+  end
+
+  def query do
+    quote do
+      import Ecto.Query
+      alias App.{Accident, Repo}
     end
   end
 

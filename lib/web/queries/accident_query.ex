@@ -1,6 +1,5 @@
 defmodule Web.AccidentQuery do
-  import Ecto.Query
-  alias App.{Accident, Repo}
+  use Web, :query
 
   import App.Accident, only: [map_to_cat: 1]
 

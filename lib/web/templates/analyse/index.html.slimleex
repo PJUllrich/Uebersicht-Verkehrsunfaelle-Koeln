@@ -3,3 +3,4 @@
     .content-column.content-form
       = render "_form.html", assigns
     .content-column.content-map
+      h1 content

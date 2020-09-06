@@ -1,0 +1,2 @@
+= @inner_content
+script type="text/javascript" src=Routes.static_path(Web.Endpoint,"/js/liveView.js")

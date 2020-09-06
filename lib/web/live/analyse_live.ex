@@ -6,7 +6,7 @@ defmodule Web.AnalyseLive do
   @impl true
   def render(assigns), do: Web.AnalyseView.render("index.html", assigns)
 
-  def mount(socket) do
+  def mount(_params, _session, socket) do
     {:ok, assign(socket, :form, AnalyseForm.new())}
   end
 

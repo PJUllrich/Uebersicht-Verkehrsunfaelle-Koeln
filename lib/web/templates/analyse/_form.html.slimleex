@@ -1,13 +1,13 @@
-= _ = form_for nil, "#", [id: "analyseFilter", as: "q", phx_submit: "fetchData"]
+= f = form_for @form, "#", [id: "analyseFilter", as: "q", phx_submit: "fetch"]
   .field
     .control.is-expanded
       label.label Jahr des Unfalls
       .select.is-multiple.is-fullwidth
         = for year <- years() do
           label
-            / - checked = year.value in @form.changes.years
+            - checked = year.value in @form.changes.years
             input.checkbox name="q[years][]" type="checkbox" value="#{year.value}" checked=false
             = year.text
   .field
     .control.is-expanded
-      button.button.is-link Anzeigen
+      = submit "Anzeigen", class: "button is-link"
