@@ -42,6 +42,12 @@
 
     &-map
       flex: 1
+      position: relative
+
+      #statistic
+        position: absolute
+        top: 1rem
+        left: 1rem
 
       #map
         height: 100%
@@ -66,21 +72,43 @@
     &-content
       writing-mode: tb-rl
 
-  tr:last-child td, .content table tbody tr:last-child th
-    border: 1px solid #dbdbdb !important
-    border-width: 0 0 1px !important
-    border-bottom-width: 1px !important
+.vertical-header
+  vertical-align: middle !important
+  text-align: center !important
 
-#accidentFilter
-  display: block
+  &-content
+    writing-mode: tb-rl
+    border: none !important
+    white-space: nowrap
+
+.summary-table
+  table-layout: fixed
+  margin-bottom: 0.1rem !important
+
+  th
+    width: 2rem
+
+  th+th, td
+    width: auto
 
 #toggleFilterBtn
   display: none
 
 .mapboxgl-popup-content
+  font: 12px/20px Helvetica Neue,Arial,Helvetica,sans-serif
   width: 23rem
 
 @media (max-width: $tablet)
+  .mapboxgl-popup-content
+    width: 21rem !important
+
+  .summary-table
+    width: 20rem !important
+
+  .summary-table
+    td, th
+      padding: 0.1em 0 !important
+
   .navbar
     padding: 0
 

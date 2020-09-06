@@ -28,6 +28,8 @@ const clusterLayerUnclusteredCount = 'unclustered-counts'
 const heatmapLayerId = 'heatmap'
 const heatmapLayerStreets = 'heatmap-streets'
 
+const summaryTableContainerId = 'statistic-content'
+
 // Since MapBox GL JS doesn't have a proper "Everything is loaded and rendered"-Event
 // this is a workaround to track whether the map has reached the 'idle' state
 // in which the map is fully loaded and the clusters can be resized and colored based on their
@@ -82,11 +84,12 @@ const createSummaryTable = (accidents) => {
     <tr><th>Fuß</th><td>${r[3][0]}</td><td>${r[3][1]}</td><td>${r[3][2]}</td><td>${r[3][3]}</td><td>${r[3][4]}</td><td>${r[3][5]}</td.</tr>
     <tr><th>B&B</th><td>${r[4][0]}</td><td>${r[4][1]}</td><td>${r[4][2]}</td><td>${r[4][3]}</td><td>${r[4][4]}</td><td>${r[4][5]}</td.</tr>
   </table>
+  <div><span>Total: ${accidents.length}</span></div>
   `
 }
 
 const setSummaryTable = (accidents) => {
-  document.getElementById('statistic-content').innerHTML = createSummaryTable(accidents)
+  document.getElementById(summaryTableContainerId).innerHTML = createSummaryTable(accidents)
 }
 
 const createPointInfo = (properties) => {
@@ -292,7 +295,6 @@ const removeClusterLayers = () => {
 
 const removeHeatmapLayers = () => {
   map.removeLayer(heatmapLayerId)
-  map.removeLayer(heatmapLayerStreets)
 }
 
 // Sets up a new MapBox GL JS map centered on Cologne, Germany
@@ -314,10 +316,19 @@ map.on('idle', () => {
   isFullyRendered = true
 })
 
-// Setup the data-source and layers of the map
-map.on('load', async () => {
-  const res = await fetch(accidentsEndpoint)
+const setMapData = async (url) => {
+  const res = await fetch(url)
   const data = await res.json()
+
+  if (map.getSource(clusterDataSource)) {
+    if (!showHeatmap) removeClusterLayers()
+    map.removeSource(clusterDataSource)
+  }
+
+  if (map.getSource(heatmapDataSource)) {
+    if (showHeatmap) removeHeatmapLayers()
+    map.removeSource(heatmapDataSource)
+  }
 
   map.addSource(clusterDataSource, {
     type: 'geojson',
@@ -331,6 +342,20 @@ map.on('load', async () => {
     type: 'geojson',
     data: data
   })
+
+  if (showHeatmap) {
+    addHeatmapLayers()
+  } else {
+    addClusterLayers()
+    addPopoverToCluster()
+    addPopoverToPoints()
+  }
+  setSummaryTable(data.features)
+}
+
+// Setup the data-source and layers of the map
+map.on('load', async () => {
+  setMapData(accidentsEndpoint)
 
   map.addSource('mapbox-streets', {
     type: 'vector',
@@ -351,16 +376,6 @@ map.on('load', async () => {
       'line-width': 1
     }
   })
-
-  if (showHeatmap) {
-    addHeatmapLayers()
-  } else {
-    addClusterLayers()
-    addPopoverToCluster()
-    addPopoverToPoints()
-  }
-
-  setSummaryTable(data.features)
 })
 
 /*
@@ -405,12 +420,7 @@ window.fetchData = (e) => {
     e => e.map(encodeURIComponent).join('=')
   ).join('&')
 
-  setButtonIsLoading(true)
-
-  map.getSource(clusterDataSource).setData(reqUrl)
-  map.getSource(heatmapDataSource).setData(reqUrl)
-
-  setButtonIsLoading(false)
+  setMapData(reqUrl)
   window.toggleFilter()
 
   return false

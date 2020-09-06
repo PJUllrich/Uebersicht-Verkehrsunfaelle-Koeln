@@ -16,7 +16,7 @@ config :app, Web.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "WtBz4ReOazDThcvxYei1aGrZiDxpBhwKhFB/fhGYXdD3iDzB0Ap+hjNQY4H8ZQdh",
   render_errors: [view: Web.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: App.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub_server: App.PubSub
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -31,6 +31,16 @@ config :phoenix, :template_engines,
   slim: PhoenixSlime.Engine,
   slime: PhoenixSlime.Engine,
   slimleex: PhoenixSlime.LiveViewEngine
+
+config :analytics_ex, repo: App.Repo
+
+config :live_dashboard_history, LiveDashboardHistory,
+  router: Web.Router,
+  metrics: Web.Telemetry
+
+config :app, :basic_auth,
+  username: "admin",
+  password: "admin"
 
 # Configures phoenix_slime to generate .slim files instead of .slime
 config :phoenix_slime, :use_slim_extension, true

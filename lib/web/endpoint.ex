@@ -6,13 +6,13 @@ defmodule Web.Endpoint do
   # Set :encryption_salt if you would also like to encrypt it.
   @session_options [
     store: :cookie,
-    key: "_app_key",
+    key: "verkehrsunfaelle.adfc.koeln",
     signing_salt: "RoTnJn9L"
   ]
 
   plug(Plug.Session, @session_options)
 
-  # socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
+  socket("/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]])
 
   # socket "/socket", Web.UserSocket,
   #   websocket: true,
@@ -36,6 +36,11 @@ defmodule Web.Endpoint do
     plug(Phoenix.LiveReloader)
     plug(Phoenix.CodeReloader)
   end
+
+  plug(Phoenix.LiveDashboard.RequestLogger,
+    param_key: "request_logger",
+    cookie_key: "request_logger"
+  )
 
   plug(Plug.RequestId)
   plug(Plug.Telemetry, event_prefix: [:phoenix, :endpoint])

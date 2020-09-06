@@ -3,7 +3,7 @@ defmodule Web.MapView do
 
   def years() do
     [
-      %{value: 2020, text: "2020 Q1"},
+      %{value: 2020, text: "2020 1. HJ"},
       %{value: 2019, text: "2019"},
       %{value: 2018, text: "2018"},
       %{value: 2017, text: "2017"},

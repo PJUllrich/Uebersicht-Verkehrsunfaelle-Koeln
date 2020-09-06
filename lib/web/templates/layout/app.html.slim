@@ -10,7 +10,7 @@ html lang="de"
     link rel="stylesheet" href=Routes.static_path(@conn,"/css/app.css")
   body
     = render "_flashes.html", assigns
-    = render @view_module, @view_template, assigns
+    = @inner_content
     = csrf_meta_tag()
     = render "_scripts.html", assigns    
 

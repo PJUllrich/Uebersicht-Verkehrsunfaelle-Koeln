@@ -44,6 +44,24 @@ _map_box_token =
     You can get one on the Mapbox Website.
     """
 
+basic_auth_username =
+  System.get_env("ADMIN_USERNAME") ||
+    raise """
+    environment variable ADMIN_USERNAME is missing.
+    You can generate one by calling: mix phx.gen.secret
+    """
+
+basic_auth_password =
+  System.get_env("ADMIN_PASSWORD") ||
+    raise """
+    environment variable ADMIN_PASSWORD is missing.
+    You can generate one by calling: mix phx.gen.secret
+    """
+
+config :app, :basic_auth,
+  username: basic_auth_username,
+  password: basic_auth_password
+
 # ## Using releases (Elixir v1.9+)
 #
 # If you are doing OTP releases, you need to instruct Phoenix
