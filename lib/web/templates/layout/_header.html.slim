@@ -6,26 +6,18 @@
     .navbar-item
       h1.navbar-title Verkehrsunfälle in Köln
 
-    a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu"
+    a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" onclick="document.querySelector('#navMenu').classList.toggle('is-active');"
       span aria-hidden="true"
       span aria-hidden="true"
       span aria-hidden="true"
 
-  .navbar-end
-    .navbar-item
-      = if @conn.request_path == Routes.live_path(@conn, Web.AnalyseLive) do
-        a href=Routes.map_path(@conn, :index)
-          button.button.is-dark Karte
-      - else
-        a href=Routes.live_path(@conn, Web.AnalyseLive)
-          button.button.is-dark Analyse
-
-  .dropdown#navMenu
-    .navbar-item
-      = if @conn.request_path == Routes.live_path(@conn, Web.AnalyseLive) do
-        a href=Routes.map_path(@conn, :index)
-          button.button.is-dark Karte
-      - else
-        a href=Routes.live_path(@conn, Web.AnalyseLive)
-          button.button.is-dark Analyse
-    
+  #navMenu.navbar-menu
+    .navbar-end
+      .navbar-item
+        = if @conn.request_path == Routes.map_path(@conn, :index) do
+            a href=Routes.live_path(@conn, Web.AnalyseLive)
+              button.button.is-dark Analyse
+        - else
+            a href=Routes.map_path(@conn, :index)
+              button.button.is-dark Karte
+        

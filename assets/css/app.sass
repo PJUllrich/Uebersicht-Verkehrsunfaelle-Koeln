@@ -1,5 +1,4 @@
 @import "bulma"
-@import "~@fortawesome/fontawesome-free/scss/fontawesome.scss"
 @import "~tippy.js/dist/tippy.css"
 
 .navbar
@@ -63,10 +62,6 @@
     color: inherit
     text-decoration: underline
 
-.summary-table
-  .horizontal-header
-    text-align: center !important
-
 .vertical-header
   vertical-align: middle !important
   text-align: center !important
@@ -80,13 +75,16 @@
   table-layout: fixed
   margin-bottom: 0.1rem !important
 
+  .horizontal-header
+    text-align: center !important
+
   th
     width: 2rem
 
   th+th, td
     width: auto
 
-#filterButtonRow
+#toggleFilterBtn
   display: none
 
 .mapboxgl-popup-content
@@ -119,6 +117,5 @@
   #accidentFilter
     display: none
 
-  #filterButtonRow
-    display: flex
-    justify-content: space-between
+  #toggleFilterBtn
+    display: block
