@@ -35,6 +35,10 @@ config :app, Web.Endpoint,
     signing_salt: "YCtbisN3aXVficIOCP8YIAKs2C9wqsRy"
   ]
 
+config :app, :basic_auth,
+  username: "admin",
+  password: "admin"
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

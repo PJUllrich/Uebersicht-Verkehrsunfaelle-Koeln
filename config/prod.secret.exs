@@ -45,16 +45,16 @@ _map_box_token =
     """
 
 basic_auth_username =
-  System.get_env("LIVE_VIEW_SIGNING_SALT") ||
+  System.get_env("ADMIN_USERNAME") ||
     raise """
     environment variable ADMIN_USERNAME is missing.
     You can generate one by calling: mix phx.gen.secret
     """
 
 basic_auth_password =
-  System.get_env("LIVE_VIEW_SIGNING_SALT") ||
+  System.get_env("ADMIN_PASSWORD") ||
     raise """
-    environment variable LIVE_VIEW_SIGNING_SALT is missing.
+    environment variable ADMIN_PASSWORD is missing.
     You can generate one by calling: mix phx.gen.secret
     """
 
