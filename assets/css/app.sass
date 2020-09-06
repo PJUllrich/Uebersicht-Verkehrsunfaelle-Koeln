@@ -19,6 +19,7 @@
   .content
     display: flex
     width: 100%
+    margin-bottom: 0
 
     &-form
       padding: 1rem
@@ -66,12 +67,6 @@
   .horizontal-header
     text-align: center !important
 
-  .vertical-header
-    vertical-align: middle !important
-
-    &-content
-      writing-mode: tb-rl
-
 .vertical-header
   vertical-align: middle !important
   text-align: center !important
@@ -91,7 +86,7 @@
   th+th, td
     width: auto
 
-#toggleFilterBtn
+#filterButtonRow
   display: none
 
 .mapboxgl-popup-content
@@ -124,5 +119,6 @@
   #accidentFilter
     display: none
 
-  #toggleFilterBtn
-    display: block
+  #filterButtonRow
+    display: flex
+    justify-content: space-between

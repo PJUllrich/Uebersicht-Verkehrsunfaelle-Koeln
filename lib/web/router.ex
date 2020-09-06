@@ -6,7 +6,8 @@ defmodule Web.Router do
   pipeline :browser do
     plug(:accepts, ["html"])
     plug(:fetch_session)
-    plug(:fetch_flash)
+    plug(:fetch_live_flash)
+    plug(:put_root_layout, {Web.LayoutView, :root})
     plug(:protect_from_forgery)
     plug(:put_secure_browser_headers)
     plug(AnalyticsEx.Plugs.CountRequestsPerPath)
@@ -27,6 +28,7 @@ defmodule Web.Router do
     pipe_through(:browser)
 
     get("/", MapController, :index)
+    live("/analyse", AnalyseLive)
     post("/api/list", MapController, :data_fallback)
   end
 

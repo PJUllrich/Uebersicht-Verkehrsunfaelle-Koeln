@@ -1,4 +1,8 @@
-button#toggleFilterBtn.button.is-light onclick="toggleFilter()" Filter 
+#filterButtonRow
+  button#toggleFilterBtn.button onclick="toggleFilter()" Filter
+
+  a href=Routes.live_path(@conn, Web.AnalyseLive)
+    button.button.is-light Analyse
 
 = render "_summary.html", assigns
 

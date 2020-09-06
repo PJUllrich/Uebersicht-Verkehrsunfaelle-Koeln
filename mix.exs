@@ -39,7 +39,7 @@ defmodule App.MixProject do
       {:phoenix_slime, "~> 0.13.1"},
       {:phoenix_pubsub, "~> 2.0"},
       {:phoenix_ecto, "~> 4.0"},
-      {:phoenix_live_view, "~> 0.14.0"},
+      {:phoenix_live_view, "~> 0.14.4"},
       {:phoenix_live_dashboard, "~> 0.1"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:ecto_sql, "~> 3.1"},
