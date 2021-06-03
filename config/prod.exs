@@ -15,12 +15,6 @@ config :app, Web.Endpoint,
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
-config :app, App.Repo,
-  url: System.get_env("DATABASE_URL"),
-  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
-  timeout: 28_000,
-  ssl: true
-
 # Do not print debug messages in production
 config :logger, level: :info
 
