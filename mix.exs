@@ -54,7 +54,8 @@ defmodule App.MixProject do
       {:telemetry_metrics, "~> 0.4"},
       {:live_dashboard_history, "~> 0.1.0"},
       {:analytics_ex, "~> 0.1.0"},
-      {:floki, ">= 0.0.0", only: :test}
+      {:floki, ">= 0.0.0", only: :test},
+      {:credo, "~> 1.5", only: [:dev, :test], runtime: false}
     ]
   end
 
