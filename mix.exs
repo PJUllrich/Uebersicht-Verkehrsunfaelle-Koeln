@@ -5,9 +5,9 @@ defmodule App.MixProject do
     [
       app: :app,
       version: "0.1.5",
-      elixir: "~> 1.5",
+      elixir: "~> 1.14.2",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:phoenix, :gettext] ++ Mix.compilers(),
+      compilers: [:phoenix] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
@@ -34,28 +34,22 @@ defmodule App.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.5.2"},
-      {:phoenix_html, "~> 2.14.2"},
-      {:phoenix_slime, "~> 0.13.1"},
+      {:phoenix, "~> 1.6.15"},
+      {:phoenix_html, "~> 3.2.0"},
       {:phoenix_pubsub, "~> 2.0"},
       {:phoenix_ecto, "~> 4.0"},
-      {:phoenix_live_view, "~> 0.14.0"},
-      {:phoenix_live_dashboard, "~> 0.1"},
+      {:phoenix_live_view, "~> 0.18.4"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:ecto_sql, "~> 3.1"},
       {:postgrex, ">= 0.0.0"},
-      {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.2"},
-      {:csv, "~> 2.3"},
+      {:csv, "~> 3.0"},
       {:httpoison, "~> 1.6"},
       {:timex, "~> 3.5"},
-      {:telemetry_poller, "~> 0.4"},
+      {:telemetry_poller, "~> 1.0"},
       {:telemetry_metrics, "~> 0.4"},
-      {:live_dashboard_history, "~> 0.1.0"},
-      {:analytics_ex, "~> 0.1.0"},
-      {:floki, ">= 0.0.0", only: :test},
-      {:credo, "~> 1.5", only: [:dev, :test], runtime: false}
+      {:floki, ">= 0.0.0", only: :test}
     ]
   end
 

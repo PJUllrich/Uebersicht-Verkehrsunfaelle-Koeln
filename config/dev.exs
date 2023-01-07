@@ -1,4 +1,4 @@
-use Mix.Config
+import Mix.Config
 
 # Configure your database
 config :app, App.Repo,
@@ -68,7 +68,6 @@ config :app, Web.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
-      ~r"priv/gettext/.*(po)$",
       ~r"lib/web/{live,views}/.*(ex)$",
       ~r"lib/web/templates/.*(eex|slim|slime)$"
     ]

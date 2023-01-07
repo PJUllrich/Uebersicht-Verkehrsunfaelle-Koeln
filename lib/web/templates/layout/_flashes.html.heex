@@ -1,0 +1,9 @@
+<p class="alert alert-success" role="alert">
+  <%= get_flash(assigns[:conn] || assigns[:socket], :success) %>
+</p>
+<p class="alert alert-info" role="alert">
+  <%= get_flash(assigns[:conn] || assigns[:socket], :info) %>
+</p>
+<p class="alert alert-danger" role="alert">
+  <%= get_flash(assigns[:conn] || assigns[:socket], :error) %>
+</p>

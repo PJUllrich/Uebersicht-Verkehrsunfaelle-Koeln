@@ -1,0 +1,99 @@
+<button id="toggleFilterBtn" class="button is-light" onclick="toggleFilter()">Filter</button>
+
+<%= form_for @form, Routes.map_url(@conn, :data), [id: "accidentFilter", as: "q", onsubmit: "return fetchData(event)"], fn _f -> %>
+  <div class="field checkbox">
+    <input id="toggleHeatmapInput" type="checkbox" onclick="toggleHeatmap()" />
+    <label for="toggleHeatmapInput">Heatmap</label>
+  </div>
+  <div class="field">
+    <div class="control is-expanded">
+      <label class="label">Jahr des Unfalls</label>
+      <div class="select is-multiple is-fullwidth">
+        <%= for year <- years() do %>
+          <label>
+            <input
+              class="checkbox"
+              name="q[years][]"
+              type="checkbox"
+              value={year.value}
+              checked={year.value in @form.changes.years}
+            />
+            <%= year.text %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <div class="control is-expanded">
+      <label class="label">
+        <span>1. Unfallbeteiligter</span>
+        <span id="info-vb-1" class="icon is-small sprite-info">
+          <i class="far fa-question-circle" />
+        </span>
+      </label>
+      <div class="select is-multiple is-fullwidth">
+        <%= for vb <- vb1() do %>
+          <label>
+            <input
+              class="checkbox"
+              name="q[vb1][]"
+              type="checkbox"
+              value={vb.value}
+              checked={vb.value in @form.changes.vb1}
+            />
+            <%= vb.text %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <div class="control is-expanded">
+      <label class="label">
+        <span>2. Unfallbeteiligter</span>
+        <span id="info-vb-2" class="icon is-small sprite-info">
+          <i class="far fa-question-circle" />
+        </span>
+      </label>
+      <div class="select is-multiple is-fullwidth">
+        <%= for vb <- vb2() do %>
+          <label>
+            <input
+              class="checkbox"
+              name="q[vb2][]"
+              type="checkbox"
+              value={vb.value}
+              checked={vb.value in @form.changes.vb2}
+            />
+            <%= vb.text %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <div class="control is-expanded">
+      <label class="labelO">Unfallschwere</label>
+      <div class="select is-multiple is-fullwidth">
+        <%= for category <- categories() do %>
+          <label>
+            <input
+              class="checkbox"
+              name="q[categories][]"
+              type="checkbox"
+              value={category.value}
+              checked={category.value in @form.changes.categories}
+            />
+            <%= category.text %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <div class="control is-expanded">
+      <button id="accidentFilterSubmitBtn" class="button is-link">Anzeigen</button>
+    </div>
+  </div>
+<% end %>

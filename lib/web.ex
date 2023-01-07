@@ -40,7 +40,6 @@ defmodule Web do
       use Phoenix.Controller, namespace: Web
 
       import Plug.Conn
-      import Web.Gettext
       import Phoenix.LiveView.Controller
 
       alias Web.Router.Helpers, as: Routes
@@ -61,8 +60,6 @@ defmodule Web do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import Web.ErrorHelpers
-      import Web.Gettext
       alias Web.Router.Helpers, as: Routes
     end
   end
@@ -86,7 +83,6 @@ defmodule Web do
   def channel do
     quote do
       use Phoenix.Channel
-      import Web.Gettext
     end
   end
 

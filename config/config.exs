@@ -5,7 +5,7 @@
 # is restricted to this project.
 
 # General application configuration
-use Mix.Config
+import Mix.Config
 
 config :app,
   ecto_repos: [App.Repo],
@@ -25,25 +25,6 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
-
-# Configures phoenix_slime Templating Library
-config :phoenix, :template_engines,
-  slim: PhoenixSlime.Engine,
-  slime: PhoenixSlime.Engine,
-  slimleex: PhoenixSlime.LiveViewEngine
-
-config :analytics_ex, repo: App.Repo
-
-config :live_dashboard_history, LiveDashboardHistory,
-  router: Web.Router,
-  metrics: Web.Telemetry
-
-config :app, :basic_auth,
-  username: "admin",
-  password: "admin"
-
-# Configures phoenix_slime to generate .slim files instead of .slime
-config :phoenix_slime, :use_slim_extension, true
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

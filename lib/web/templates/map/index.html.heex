@@ -1,0 +1,22 @@
+<div class="hero is-fullheight">
+  <div class="hero-head">
+    <%= render("_header.html", assigns) %>
+  </div>
+
+  <div class="hero-body">
+    <div class="content">
+      <div class="content-column content-form">
+        <%= render("_form.html", assigns) %>
+      </div>
+      <div class="content-column content-map">
+        <div id="map">
+          <%= render("_summary.html", assigns) %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-foot">
+    <%= render("_footer.html", assigns) %>
+  </div>
+</div>
