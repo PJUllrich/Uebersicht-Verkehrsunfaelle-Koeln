@@ -12,7 +12,6 @@ defmodule App.Application do
       App.Repo,
       Web.Telemetry,
       {Phoenix.PubSub, [name: App.PubSub, adapter: Phoenix.PubSub.PG2]},
-      App.Ping,
       # Start the endpoint when the application starts
       Web.Endpoint
       # Starts a worker by calling: App.Worker.start_link(arg)
