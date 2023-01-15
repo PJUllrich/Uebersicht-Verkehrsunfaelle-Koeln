@@ -1,5 +1,5 @@
-import "regenerator-runtime";
-import mapboxgl from "mapbox-gl";
+import "../vendor/regenerator-runtime";
+import mapboxgl from "../vendor/mapbox-gl";
 
 // Receive config parameter from the app.html layout template
 const accidentsEndpoint = document.currentScript.getAttribute("endpoint");

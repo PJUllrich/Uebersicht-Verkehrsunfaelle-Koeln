@@ -27,7 +27,8 @@ config :app, Web.Endpoint,
       "development",
       "--watch-stdin",
       cd: Path.expand("../assets", __DIR__)
-    ]
+    ],
+    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}
   ]
 
 config :app, Web.Endpoint,

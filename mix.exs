@@ -49,7 +49,8 @@ defmodule App.MixProject do
       {:timex, "~> 3.5"},
       {:telemetry_poller, "~> 1.0"},
       {:telemetry_metrics, "~> 0.4"},
-      {:floki, ">= 0.0.0", only: :test}
+      {:floki, ">= 0.0.0", only: :test},
+      {:esbuild, "~> 0.4", runtime: Mix.env() == :dev}
     ]
   end
 
@@ -64,7 +65,7 @@ defmodule App.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"],
-      "assets.deploy": ["phx.digest"]
+      "assets.deploy": ["esbuild default --minify", "phx.digest"]
     ]
   end
 end

@@ -1,0 +1,138 @@
+.navbar {
+  overflow: auto;
+  padding-left: 0.3rem;
+}
+.navbar .logo {
+  padding-top: 1rem;
+}
+.navbar-title {
+  font-size: 1.5rem;
+}
+
+.hero-body {
+  padding: 0;
+  align-items: stretch !important;
+}
+.hero-body .content {
+  display: flex;
+  width: 100%;
+}
+.hero-body .content-form {
+  padding: 1rem;
+}
+.hero-body .content-form form {
+  padding-top: 1rem;
+}
+.hero-body .content-form form .select {
+  display: flex;
+  flex-direction: column;
+}
+.hero-body .content-form form .select input {
+  margin: 0 0.5rem 0 0.3rem;
+}
+.hero-body .content-form form .checkbox label {
+  padding-left: 0.4rem;
+}
+.hero-body .content-form form .sprite-info {
+  width: 0.9rem;
+  margin-left: 0.3rem;
+}
+.hero-body .content-map {
+  flex: 1;
+  position: relative;
+}
+.hero-body .content-map #statistic {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+}
+.hero-body .content-map #map {
+  height: 100%;
+}
+
+.hero-foot {
+  text-align: center;
+  padding: 0.3rem 0;
+  font-size: 0.8rem;
+}
+.hero-foot .links a {
+  margin-left: 0.5rem;
+  color: inherit;
+  text-decoration: underline;
+}
+
+#accidentFilter {
+  display: block;
+}
+
+#toggleFilterBtn {
+  display: none;
+}
+
+.horizontal-header {
+  text-align: center !important;
+}
+
+.vertical-header {
+  vertical-align: middle !important;
+  text-align: center !important;
+}
+.vertical-header-content {
+  writing-mode: tb-rl;
+  border: none !important;
+  white-space: nowrap;
+}
+
+.summary-table {
+  table-layout: fixed;
+  margin-bottom: 0.1rem !important;
+}
+.summary-table th {
+  width: 2rem;
+}
+.summary-table th + th,
+.summary-table td {
+  width: auto;
+}
+
+tr:last-child td,
+.content table tbody tr:last-child th {
+  border: 1px solid #dbdbdb !important;
+  border-width: 0 0 1px !important;
+}
+
+.mapboxgl-popup-content {
+  font: 12px/20px Helvetica Neue, Arial, Helvetica, sans-serif;
+  width: 23rem;
+}
+
+@media (max-width: 769px) {
+  .mapboxgl-popup-content {
+    width: 21rem !important;
+  }
+  .summary-table {
+    width: 20rem !important;
+  }
+  .summary-table td,
+  .summary-table th {
+    padding: 0.1em 0 !important;
+  }
+  .navbar {
+    padding: 0;
+  }
+  .navbar-item {
+    padding-right: 0;
+  }
+  .navbar-title {
+    font-size: 1rem;
+  }
+  .hero-body .content {
+    flex-direction: column;
+  }
+  #accidentFilter {
+    display: none;
+  }
+  #toggleFilterBtn {
+    display: block;
+  }
+}
