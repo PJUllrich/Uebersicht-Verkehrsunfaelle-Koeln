@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "mapbox-gl": "^1.10.1",
+    "tippy.js": "^6.3.7"
+  }
+}

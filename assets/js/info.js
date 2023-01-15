@@ -1,4 +1,4 @@
-import tippy from "../vendor/tippy.js";
+import tippy from "tippy.js";
 
 tippy("#info-vb-1", {
   content:

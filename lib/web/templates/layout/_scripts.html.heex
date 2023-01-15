@@ -2,7 +2,7 @@
 <script src="https://kit.fontawesome.com/59f3a7720c.js" crossorigin="anonymous" />
 <script
   type="text/javascript"
-  src={Routes.static_path(@conn, "/js/app.js")}
+  src={Routes.static_path(@conn, "/assets/app.js")}
   accesstoken={System.get_env("MAPBOX_ACCESS_TOKEN")}
   endpoint={assigns[:endpoint] || Routes.map_url(@conn, :data)}
 />
