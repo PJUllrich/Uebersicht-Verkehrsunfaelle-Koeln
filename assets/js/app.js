@@ -1,3 +1,6 @@
+// We don't use tailwind and therefore need to instruct esbuild
+// to bundle the app.css
+import "../css/app.css";
 import "phoenix_html";
 
 import "./mapbox";
