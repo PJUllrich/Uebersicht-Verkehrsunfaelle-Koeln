@@ -2,5 +2,8 @@
   "dependencies": {
     "mapbox-gl": "^1.10.1",
     "tippy.js": "^6.3.7"
+  },
+  "scripts": {
+    "deploy": "NODE_ENV=production postcss css/app.css -o ../priv/static/assets/app.css"
   }
 }
